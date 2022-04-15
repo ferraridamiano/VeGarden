@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_background"
-    tools:context=".MainActivity">
+    tools:context=".SignupActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -39,15 +39,16 @@
             android:textSize="20sp" />
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilName"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="10dp">
+            app:errorEnabled="true">
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/tvName"
+                android:id="@+id/etName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/name"
@@ -55,31 +56,33 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilSurname"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="10dp">
+            app:errorEnabled="true">
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/tvSurname"
+                android:id="@+id/etSurname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/surname"
-                android:inputType="textCapWords"/>
+                android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilEmail"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="10dp">
+            app:errorEnabled="true">
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/tvEmail"
+                android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/email"
@@ -87,15 +90,16 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPassword"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="10dp">
+            app:errorEnabled="true">
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/tvPassword"
+                android:id="@+id/etPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
@@ -103,14 +107,16 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilConfirmPassword"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp">
+            android:layout_marginEnd="24dp"
+            app:errorEnabled="true">
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/tvConfirmPassword"
+                android:id="@+id/etConfirmPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/confirm_password"
@@ -131,6 +137,7 @@
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/tvSignin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
@@ -140,7 +147,7 @@
                 android:paddingVertical="20dp"
                 android:paddingStart="10dp"
                 android:paddingEnd="20dp"
-                android:text="@string/sign_in"
+                android:text="@string/sign_in_ul"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -149,7 +156,7 @@
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/extended_fab"
+        android:id="@+id/fabSignup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
