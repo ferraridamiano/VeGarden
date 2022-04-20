@@ -13,4 +13,9 @@
     <string name="surname">Surname</string>
     <string name="confirm_password">Confirm your password</string>
     <string name="already_have_an_account">Already have an account?</string>
+    <string name="width">Width</string>
+    <string name="height">Height</string>
+    <string name="total_area">Total area:</string>
+    <string name="next">Next</string>
+    <string name="garden_size_question">What is the size of your vegetable garden?</string>
 </resources>

@@ -99,7 +99,7 @@ class SignupActivity : AppCompatActivity() {
                         .addOnFailureListener { e ->
                             Log.w(TAG, "Error adding document", e)
                         }
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent(this, GardenSetupActivity::class.java))
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
