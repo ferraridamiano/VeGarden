@@ -9,6 +9,7 @@ import android.widget.Toast
 import com.example.vegarden.databinding.ActivitySignupBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class SignupActivity : AppCompatActivity() {
@@ -68,12 +69,12 @@ class SignupActivity : AppCompatActivity() {
             if (!error) {
                 Toast.makeText(this, "Creating account: $email $password", Toast.LENGTH_SHORT)
                     .show()
-                createAccount(email, password)
+                createAccount(name, surname, email, password)
             }
         }
     }
 
-    private fun createAccount(email: String, password: String) {
+    private fun createAccount(name: String, surname: String, email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -84,6 +85,20 @@ class SignupActivity : AppCompatActivity() {
                         baseContext, "Authentication succeded.",
                         Toast.LENGTH_SHORT
                     ).show()
+                    val db = Firebase.firestore
+                    // Create a new user with a first and last name
+                    val newUser = hashMapOf(
+                        "name" to name,
+                        "surname" to surname,
+                    )
+
+                    db.collection("users").document(user!!.uid).set(newUser)
+                        .addOnSuccessListener { _ ->
+                            Log.d(TAG, "DocumentSnapshot added with ID: ${user.uid}")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w(TAG, "Error adding document", e)
+                        }
                     startActivity(Intent(this, MainActivity::class.java))
                 } else {
                     // If sign in fails, display a message to the user.
