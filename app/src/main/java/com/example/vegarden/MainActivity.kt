@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -24,24 +23,24 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val rows = 3
-        val cols = 3
-        val garden = createVegetableGarden(this, rows, cols)
-        garden.forEach { binding.column.addView(it) }
-
-
         auth = Firebase.auth
-
-        val user = auth.currentUser
-
         val db = Firebase.firestore
 
-        db.collection("users")
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    Log.d(TAG, "${document.id} => ${document.data}")
-                }
+        var rows = 1
+        var cols = 1
+
+        var garden = createVegetableGarden(this, rows, cols)
+        binding.column.removeAllViews()
+        garden.forEach { binding.column.addView(it) }
+
+        db.collection("gardens").document(auth.currentUser!!.uid).get()
+            .addOnSuccessListener { document ->
+                val data = document.data!!.toMap()
+                rows = data["rows"].toString().toInt()
+                cols = data["columns"].toString().toInt()
+                garden = createVegetableGarden(this, rows, cols)
+                binding.column.removeAllViews()
+                garden.forEach { binding.column.addView(it) }
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents.", exception)

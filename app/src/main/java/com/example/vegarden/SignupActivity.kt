@@ -95,11 +95,13 @@ class SignupActivity : AppCompatActivity() {
                     db.collection("users").document(user!!.uid).set(newUser)
                         .addOnSuccessListener { _ ->
                             Log.d(TAG, "DocumentSnapshot added with ID: ${user.uid}")
+                            startActivity(Intent(this, GardenSetupActivity::class.java))
+                            finish()
                         }
                         .addOnFailureListener { e ->
                             Log.w(TAG, "Error adding document", e)
+                            Toast.makeText(this, "Connection error. Try again later...", Toast.LENGTH_SHORT).show()
                         }
-                    startActivity(Intent(this, GardenSetupActivity::class.java))
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)

@@ -1,21 +1,33 @@
 package com.example.vegarden
 
+import android.content.ContentValues
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import com.example.vegarden.databinding.ActivityGardenSetupBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class GardenSetupActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityGardenSetupBinding
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityGardenSetupBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        auth = Firebase.auth
+        val db = Firebase.firestore
 
         // Depending on text it will show/hide elements and compute the area
 
@@ -58,12 +70,11 @@ class GardenSetupActivity : AppCompatActivity() {
             run {
                 val etText = binding.etWidth.text.toString()
                 if (!focus && (etText.isBlank() || etText.toInt() <= 0)) {
-                    binding.etWidth.error = "Error"
+                    binding.tilWidth.error = "Error"
                     // The following line prevent the error icon to be displayed on top of the "m"
                     binding.tvWidthUnit.visibility = View.INVISIBLE
-                }
-                else {
-                    binding.etWidth.error = null
+                } else {
+                    binding.tilWidth.error = null
                     binding.tvWidthUnit.visibility = View.VISIBLE
                 }
             }
@@ -73,15 +84,47 @@ class GardenSetupActivity : AppCompatActivity() {
             run {
                 val etText = binding.etHeight.text.toString()
                 if (!focus && (etText.isBlank() || etText.toInt() <= 0)) {
-                    binding.etHeight.error = "Error"
+                    binding.tilHeight.error = "Error"
                     // The following line prevent the error icon to be displayed on top of the "m"
                     binding.tvHeightUnit.visibility = View.INVISIBLE
-                }
-                else {
-                    binding.etHeight.error = null
+                } else {
+                    binding.tilHeight.error = null
                     binding.tvHeightUnit.visibility = View.VISIBLE
                 }
             }
+        }
+
+        // FAB click
+        binding.fabNext.setOnClickListener {
+            // Create a new empty vegetable garden
+            // Here we want that the smaller number is the columns and the greater value is the rows
+            val rows: Int
+            val columns: Int
+            val a = binding.etWidth.text.toString().toInt()
+            val b = binding.etHeight.text.toString().toInt()
+            if (a > b) {
+                rows = a
+                columns = b
+            } else {
+                rows = b
+                columns = a
+            }
+
+            val newGarden = hashMapOf(
+                "rows" to rows,
+                "columns" to columns,
+            )
+
+            db.collection("gardens").document(auth.currentUser!!.uid).set(newGarden)
+                .addOnSuccessListener { _ ->
+                    Log.d(ContentValues.TAG, "DocumentSnapshot added with ID: ${auth.currentUser!!.uid}")
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                }
+                .addOnFailureListener { e ->
+                    Log.w(ContentValues.TAG, "Error adding document", e)
+                    Toast.makeText(this, "Connection error. Try again later...", Toast.LENGTH_SHORT).show()
+                }
         }
     }
 }

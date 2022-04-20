@@ -49,7 +49,7 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilName"
+                    android:id="@+id/tilWidth"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -89,6 +89,7 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilHeight"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -146,7 +147,6 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabNext"
-        android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -154,6 +154,7 @@
         android:backgroundTint="@color/primary"
         android:text="@string/next"
         android:textColor="@color/white"
+        android:visibility="invisible"
         app:icon="@drawable/ic_baseline_arrow_forward_24"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
