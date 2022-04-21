@@ -18,6 +18,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.leinardi.android.speeddial.SpeedDialActionItem
 
 class MyGardenFragment : Fragment() {
 
@@ -50,6 +51,21 @@ class MyGardenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.speedDial.addActionItem(
+            SpeedDialActionItem.Builder(R.id.addPhoto, R.drawable.ic_baseline_add_a_photo_24)
+                .setLabel(getString(R.string.add_a_photo))
+                .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.secondary, null))
+                .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, null))
+                .create()
+        )
+        binding.speedDial.addActionItem(
+            SpeedDialActionItem.Builder(R.id.addPost, R.drawable.ic_baseline_post_add_24)
+                .setLabel(getString(R.string.add_a_post))
+                .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.secondary, null))
+                .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, null))
+                .create()
+        )
 
         var rows = 0
         var cols = 0

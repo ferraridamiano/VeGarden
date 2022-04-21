@@ -18,4 +18,6 @@
     <string name="total_area">Total area:</string>
     <string name="next">Next</string>
     <string name="garden_size_question">What is the size of your vegetable garden?</string>
+    <string name="add_a_photo">Add a photo</string>
+    <string name="add_a_post">Add a post</string>
 </resources>
