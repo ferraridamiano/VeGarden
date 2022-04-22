@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="Damiano Ferrari"
+        android:visibility="invisible"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,9 +19,11 @@
         app:layout_constraintVertical_bias="0.3" />
 
     <TextView
+        android:id="@+id/tvSays"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="6dp"
+        android:visibility="invisible"
         android:text="@string/says"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/tvNameSurname"
@@ -44,7 +46,7 @@
             android:id="@+id/etPost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Write a post"
+            android:hint="@string/write_a_post"
             android:inputType="textMultiLine" />
     </com.google.android.material.textfield.TextInputLayout>
 
