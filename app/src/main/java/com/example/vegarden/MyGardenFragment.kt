@@ -2,6 +2,7 @@ package com.example.vegarden
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import com.example.vegarden.databinding.FragmentMyGardenBinding
@@ -19,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.leinardi.android.speeddial.SpeedDialActionItem
+import com.leinardi.android.speeddial.SpeedDialView
 
 class MyGardenFragment : Fragment() {
 
@@ -52,6 +55,29 @@ class MyGardenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Plot garden
+        var garden: List<View>?
+        db.collection("gardens").document(auth.currentUser!!.uid).get()
+            .addOnSuccessListener { document ->
+                val data = document.data!!.toMap()
+                val rows = data["rows"].toString().toInt()
+                val cols = data["columns"].toString().toInt()
+                garden = createVegetableGarden(
+                    requireContext(),
+                    rows,
+                    cols,
+                    ResourcesCompat.getDrawable(resources, R.color.plotsSeparator, null)!!,
+                    resources.getDimension(R.dimen.plotsSeparatorSize).toInt()
+                )
+                binding.column.removeAllViews()
+                garden!!.forEach { binding.column.addView(it) }
+                binding.progressBar.visibility = View.GONE
+            }
+            .addOnFailureListener { exception ->
+                Log.w(ContentValues.TAG, "Error getting documents.", exception)
+            }
+
+        // Speed dial
         binding.speedDial.addActionItem(
             SpeedDialActionItem.Builder(R.id.addPhoto, R.drawable.ic_baseline_add_a_photo_24)
                 .setLabel(getString(R.string.add_a_photo))
@@ -67,29 +93,21 @@ class MyGardenFragment : Fragment() {
                 .create()
         )
 
-        var rows = 0
-        var cols = 0
-        var garden: List<View>?
-
-        db.collection("gardens").document(auth.currentUser!!.uid).get()
-            .addOnSuccessListener { document ->
-                val data = document.data!!.toMap()
-                rows = data["rows"].toString().toInt()
-                cols = data["columns"].toString().toInt()
-                garden = createVegetableGarden(
-                    requireContext(),
-                    rows,
-                    cols,
-                    ResourcesCompat.getDrawable(resources, R.color.plotsSeparator, null)!!,
-                    resources.getDimension(R.dimen.plotsSeparatorSize).toInt()
-                )
-                binding.column.removeAllViews()
-                garden!!.forEach { binding.column.addView(it) }
-                binding.progressBar.visibility = View.GONE
+        binding.speedDial.setOnActionSelectedListener(SpeedDialView.OnActionSelectedListener { actionItem ->
+            when (actionItem.id) {
+                R.id.addPhoto -> {
+                    Toast.makeText(requireContext(), "add photo", Toast.LENGTH_SHORT).show()
+                    binding.speedDial.close()
+                    return@OnActionSelectedListener true // close with animation
+                }
+                R.id.addPost -> {
+                    startActivity(Intent(requireContext(), AddPostActivity::class.java))
+                    binding.speedDial.close()
+                    return@OnActionSelectedListener true // close with animation
+                }
             }
-            .addOnFailureListener { exception ->
-                Log.w(ContentValues.TAG, "Error getting documents.", exception)
-            }
+            false
+        })
     }
 }
 

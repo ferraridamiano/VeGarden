@@ -20,4 +20,5 @@
     <string name="garden_size_question">What is the size of your vegetable garden?</string>
     <string name="add_a_photo">Add a photo</string>
     <string name="add_a_post">Add a post</string>
+    <string name="says">says:</string>
 </resources>
