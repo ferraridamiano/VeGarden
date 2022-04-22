@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,13 +23,18 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MyGardenFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
+    private lateinit var storage: FirebaseStorage
     private var _binding: FragmentMyGardenBinding? = null
 
     // This property is only valid between onCreateView and onDestroyView.
@@ -52,6 +58,7 @@ class MyGardenFragment : Fragment() {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
         db = Firebase.firestore
+        storage = Firebase.storage
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -101,7 +108,8 @@ class MyGardenFragment : Fragment() {
         binding.speedDial.setOnActionSelectedListener(SpeedDialView.OnActionSelectedListener { actionItem ->
             when (actionItem.id) {
                 R.id.addPhoto -> {
-                    Toast.makeText(requireContext(), "add photo", Toast.LENGTH_SHORT).show()
+                    fileChooserContract.launch("image/*")
+
                     binding.speedDial.close()
                     return@OnActionSelectedListener true // close with animation
                 }
@@ -114,6 +122,46 @@ class MyGardenFragment : Fragment() {
             false
         })
     }
+
+    private val fileChooserContract =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { imageUri ->
+            if (imageUri != null) {
+                val ref =
+                    storage.reference.child("images/${auth.currentUser!!.uid}-${System.currentTimeMillis()}")
+                ref.putFile(imageUri).continueWithTask { task ->
+                    if (!task.isSuccessful) {
+                        task.exception?.let {
+                            throw it
+                        }
+                    }
+                    ref.downloadUrl
+                }.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val downloadUri = task.result
+                        val newPost = hashMapOf(
+                            "user" to auth.currentUser!!.uid,
+                            "type" to "photo",
+                            "content" to downloadUri,
+                            "timestamp" to Calendar.getInstance().time
+                        )
+                        db.collection("posts").add(newPost)
+                            .addOnSuccessListener {
+                                Toast.makeText(requireContext(), "Post added", Toast.LENGTH_SHORT)
+                                    .show()
+                            }.addOnFailureListener {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Error connecting to internet",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                    } else {
+                        // TODO Handle failures
+                    }
+                }
+            }
+        }
+
 
     override fun onResume() {
         super.onResume()
