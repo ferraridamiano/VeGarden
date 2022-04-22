@@ -14,10 +14,12 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vegarden.databinding.FragmentMyGardenBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.leinardi.android.speeddial.SpeedDialActionItem
@@ -69,13 +71,16 @@ class MyGardenFragment : Fragment() {
                     ResourcesCompat.getDrawable(resources, R.color.plotsSeparator, null)!!,
                     resources.getDimension(R.dimen.plotsSeparatorSize).toInt()
                 )
-                binding.column.removeAllViews()
-                garden!!.forEach { binding.column.addView(it) }
+                binding.garden.removeAllViews()
+                garden!!.forEach { binding.garden.addView(it) }
                 binding.progressBar.visibility = View.GONE
             }
             .addOnFailureListener { exception ->
                 Log.w(ContentValues.TAG, "Error getting documents.", exception)
             }
+
+        // Retrieve and display posts
+        refreshPosts()
 
         // Speed dial
         binding.speedDial.addActionItem(
@@ -108,6 +113,35 @@ class MyGardenFragment : Fragment() {
             }
             false
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshPosts()
+    }
+
+    private fun refreshPosts() {
+        db.collection("posts")
+            .whereEqualTo("user", auth.currentUser!!.uid)
+            .orderBy("timestamp", Query.Direction.DESCENDING).limit(10)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    Toast.makeText(requireContext(), "No posts found", Toast.LENGTH_SHORT).show()
+                } else {
+                    binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
+                    val data = ArrayList<PostsViewModel>()
+                    documents.forEach { document ->
+                        data.add(PostsViewModel(document.data["content"].toString()))
+                    }
+                    binding.rvPosts.adapter = PostsAdapter(data)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(ContentValues.TAG, "Error getting documents.", exception)
+                Toast.makeText(requireContext(), "Error connecting to internet", Toast.LENGTH_SHORT)
+                    .show()
+            }
     }
 }
 
