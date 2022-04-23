@@ -14,4 +14,9 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="roundedPhotoPost" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/radiusPost</item>
+    </style>
+
 </resources>

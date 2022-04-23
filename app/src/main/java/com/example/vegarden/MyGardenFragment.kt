@@ -148,6 +148,7 @@ class MyGardenFragment : Fragment() {
                             .addOnSuccessListener {
                                 Toast.makeText(requireContext(), "Post added", Toast.LENGTH_SHORT)
                                     .show()
+                                refreshPosts()
                             }.addOnFailureListener {
                                 Toast.makeText(
                                     requireContext(),
@@ -180,7 +181,11 @@ class MyGardenFragment : Fragment() {
                     binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
                     val data = ArrayList<PostsViewModel>()
                     documents.forEach { document ->
-                        data.add(PostsViewModel(document.data["content"].toString()))
+                        if(document.data["type"].toString() == "post"){
+                            data.add(PostsViewModel(PostsAdapter.VIEW_TYPE_TEXT, document.data["content"].toString()))
+                        } else { // is a photo
+                            data.add(PostsViewModel(PostsAdapter.VIEW_TYPE_PHOTO, document.data["content"].toString()))
+                        }
                     }
                     binding.rvPosts.adapter = PostsAdapter(data)
                 }

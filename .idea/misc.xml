@@ -18,6 +18,8 @@
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.3536458333333333" />
         <entry key="app/src/main/res/layout/plot.xml" value="0.18020833333333333" />
         <entry key="app/src/main/res/layout/post.xml" value="0.3536458333333333" />
+        <entry key="app/src/main/res/layout/post_photo.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/post_text.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/prova.xml" value="0.3536458333333333" />
         <entry key="app/src/main/res/menu/bottom_nav_bar.xml" value="0.18020833333333333" />
         <entry key="app/src/main/res/menu/speed_dial.xml" value="0.3536458333333333" />
