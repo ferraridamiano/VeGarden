@@ -27,7 +27,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
-import java.util.*
+import java.util.Calendar
 import kotlin.collections.ArrayList
 
 class MyGardenFragment : Fragment() {
@@ -181,10 +181,20 @@ class MyGardenFragment : Fragment() {
                     binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
                     val data = ArrayList<PostsViewModel>()
                     documents.forEach { document ->
-                        if(document.data["type"].toString() == "post"){
-                            data.add(PostsViewModel(PostsAdapter.VIEW_TYPE_TEXT, document.data["content"].toString()))
+                        if (document.data["type"].toString() == "post") {
+                            data.add(
+                                PostsViewModel(
+                                    PostsAdapter.VIEW_TYPE_TEXT,
+                                    document.data["content"].toString()
+                                )
+                            )
                         } else { // is a photo
-                            data.add(PostsViewModel(PostsAdapter.VIEW_TYPE_PHOTO, document.data["content"].toString()))
+                            data.add(
+                                PostsViewModel(
+                                    PostsAdapter.VIEW_TYPE_PHOTO,
+                                    document.data["content"].toString()
+                                )
+                            )
                         }
                     }
                     binding.rvPosts.adapter = PostsAdapter(data)

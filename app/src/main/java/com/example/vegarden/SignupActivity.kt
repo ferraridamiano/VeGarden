@@ -67,8 +67,6 @@ class SignupActivity : AppCompatActivity() {
             }
 
             if (!error) {
-                Toast.makeText(this, "Creating account: $email $password", Toast.LENGTH_SHORT)
-                    .show()
                 createAccount(name, surname, email, password)
             }
         }
