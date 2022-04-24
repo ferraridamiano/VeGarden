@@ -17,6 +17,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vegarden.databinding.FragmentMyGardenBinding
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -185,14 +186,16 @@ class MyGardenFragment : Fragment() {
                             data.add(
                                 PostsViewModel(
                                     PostsAdapter.VIEW_TYPE_TEXT,
-                                    document.data["content"].toString()
+                                    document.data["content"] as String,
+                                    (document.data["timestamp"] as Timestamp).toDate()
                                 )
                             )
                         } else { // is a photo
                             data.add(
                                 PostsViewModel(
                                     PostsAdapter.VIEW_TYPE_PHOTO,
-                                    document.data["content"].toString()
+                                    document.data["content"] as String,
+                                    (document.data["timestamp"] as Timestamp).toDate()
                                 )
                             )
                         }

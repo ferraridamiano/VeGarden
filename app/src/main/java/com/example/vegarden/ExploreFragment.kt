@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vegarden.databinding.FragmentExploreBinding
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -70,11 +71,15 @@ class ExploreFragment : Fragment() {
                     binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
                     val data = ArrayList<PostsViewModel>()
                     documents.forEach { document ->
-                        if(document.data["type"].toString() == "post"){
-                            data.add(PostsViewModel(PostsAdapter.VIEW_TYPE_TEXT, document.data["content"].toString()))
-                        } else { // is a photo
-                            data.add(PostsViewModel(PostsAdapter.VIEW_TYPE_PHOTO, document.data["content"].toString()))
-                        }
+                        data.add(
+                            PostsViewModel(
+                                if (document.data["type"].toString() == "post")
+                                    PostsAdapter.VIEW_TYPE_TEXT
+                                else PostsAdapter.VIEW_TYPE_PHOTO,
+                                document.data["content"] as String,
+                                (document.data["timestamp"] as Timestamp).toDate()
+                            )
+                        )
                     }
                     binding.rvPosts.adapter = PostsAdapter(data)
                 }

@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
+import java.util.*
 
 class PostsAdapter(private val postsList: List<PostsViewModel>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -18,19 +19,25 @@ class PostsAdapter(private val postsList: List<PostsViewModel>) :
 
     private inner class TextViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
-        var textview: TextView = itemView.findViewById(R.id.textView)
+        var tvPostText: TextView = itemView.findViewById(R.id.tvPostText)
+        var tvTimestamp: TextView = itemView.findViewById(R.id.tvTimestamp)
+
         fun bind(position: Int) {
             val recyclerViewModel = postsList[position]
-            textview.text = recyclerViewModel.textOrUrl
+            tvPostText.text = recyclerViewModel.textOrUrl
+            tvTimestamp.text = getDaysSincePost(recyclerViewModel.timestamp)
         }
     }
 
     private inner class PhotoViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         var imageView: ImageView = itemView.findViewById(R.id.ivPhoto)
+        var tvTimestamp: TextView = itemView.findViewById(R.id.tvTimestamp)
+
         fun bind(position: Int) {
             val recyclerViewModel = postsList[position]
             Picasso.get().load(recyclerViewModel.textOrUrl).into(imageView)
+            tvTimestamp.text = getDaysSincePost(recyclerViewModel.timestamp)
         }
     }
 
@@ -62,5 +69,16 @@ class PostsAdapter(private val postsList: List<PostsViewModel>) :
     }
 
     override fun getItemCount(): Int = postsList.size
-
 }
+
+private fun getDaysSincePost(postDate: Date): String {
+    val daysSincePost =
+        (Calendar.getInstance().time.time - postDate.time).floorDiv(86_400_000)
+
+    if (daysSincePost < 1)
+        return "Today"
+    else if (daysSincePost < 2)
+        return "Yesterday"
+    return "$daysSincePost days ago"
+}
+
