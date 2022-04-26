@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VeGarden">
         <activity
+            android:name=".ChangeCropActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddPostActivity"
             android:exported="false" />
         <activity
@@ -31,7 +34,7 @@
             android:exported="false" />
         <activity
             android:name=".GardenSetupActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
     </application>
 
 </manifest>

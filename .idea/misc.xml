@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/drawable/post_border.xml" value="0.2975" />
         <entry key="app/src/main/res/drawable/post_timestamp_border.xml" value="0.2975" />
         <entry key="app/src/main/res/layout/activity_add_post.xml" value="0.3536458333333333" />
+        <entry key="app/src/main/res/layout/activity_change_crop.xml" value="0.2552083333333333" />
         <entry key="app/src/main/res/layout/activity_garden_setup.xml" value="0.3536458333333333" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_main2.xml" value="0.3536458333333333" />

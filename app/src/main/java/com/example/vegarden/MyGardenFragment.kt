@@ -262,5 +262,9 @@ private fun createPlot(context: Context): ImageView {
         1.0f
     )
     imageView.adjustViewBounds = true
+    imageView.isClickable = true
+    imageView.setOnClickListener {
+        context.startActivity(Intent(context, ChangeCropActivity::class.java))
+    }
     return imageView
 }
