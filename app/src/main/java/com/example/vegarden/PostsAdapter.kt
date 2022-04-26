@@ -7,25 +7,31 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import java.util.*
+import java.util.Date
+import java.util.Calendar
 
 class PostsAdapter(private val postsList: List<PostsViewModel>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
-        const val VIEW_TYPE_TEXT = 1
-        const val VIEW_TYPE_PHOTO = 2
+        const val TEXT = 1
+        const val PHOTO = 2
     }
 
     private inner class TextViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         var tvPostText: TextView = itemView.findViewById(R.id.tvPostText)
         var tvTimestamp: TextView = itemView.findViewById(R.id.tvTimestamp)
+        var tvUser: TextView = itemView.findViewById(R.id.tvUser)
 
         fun bind(position: Int) {
             val recyclerViewModel = postsList[position]
             tvPostText.text = recyclerViewModel.textOrUrl
             tvTimestamp.text = getDaysSincePost(recyclerViewModel.timestamp)
+            if (recyclerViewModel.userNameSurname == null)
+                tvUser.visibility = View.GONE
+            else
+                tvUser.text = recyclerViewModel.userNameSurname
         }
     }
 
@@ -42,7 +48,7 @@ class PostsAdapter(private val postsList: List<PostsViewModel>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType == VIEW_TYPE_TEXT) {
+        if (viewType == TEXT) {
             return TextViewHolder(
                 LayoutInflater.from(parent.context)
                     .inflate(R.layout.post_text, parent, false)
@@ -57,7 +63,7 @@ class PostsAdapter(private val postsList: List<PostsViewModel>) :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-        if (postsList[position].viewType == VIEW_TYPE_TEXT) {
+        if (postsList[position].viewType == TEXT) {
             (holder as TextViewHolder).bind(position)
         } else {
             (holder as PhotoViewHolder).bind(position)

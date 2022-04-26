@@ -1,6 +1,7 @@
 package com.example.vegarden
 
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -61,6 +62,10 @@ class ExploreFragment : Fragment() {
     }
 
     private fun refreshPosts() {
+        binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
+        val arrayPosts = ArrayList<PostsViewModel>()
+        val adapter = PostsAdapter(arrayPosts)
+        binding.rvPosts.adapter = adapter
         db.collection("posts")
             .orderBy("timestamp", Query.Direction.DESCENDING).limit(10)
             .get()
@@ -68,26 +73,32 @@ class ExploreFragment : Fragment() {
                 if (documents.isEmpty) {
                     Toast.makeText(requireContext(), "No posts found", Toast.LENGTH_SHORT).show()
                 } else {
-                    binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
-                    val data = ArrayList<PostsViewModel>()
-                    documents.forEach { document ->
-                        data.add(
-                            PostsViewModel(
-                                if (document.data["type"].toString() == "post")
-                                    PostsAdapter.VIEW_TYPE_TEXT
-                                else PostsAdapter.VIEW_TYPE_PHOTO,
-                                document.data["content"] as String,
-                                (document.data["timestamp"] as Timestamp).toDate()
-                            )
-                        )
-                    }
-                    binding.rvPosts.adapter = PostsAdapter(data)
+                    val userUids = mutableSetOf<String>()
+                    // Reduce all the UIDs with get rid of non repeating elements
+                    documents.forEach { userUids.add(it.data["user"] as String) }
+                    val mapUidNameSurname = mutableMapOf<String, String>()
+                    db.collection("users").whereIn("uid", userUids.toList()).get()
+                        .addOnSuccessListener { usersData ->
+                            usersData.forEach { userData ->
+                                val name = userData.data["name"] as String
+                                val surname = userData.data["surname"] as String
+                                mapUidNameSurname[userData.data["uid"] as String] = "$name $surname"
+                            }
+                            documents.forEach { postData ->
+                                arrayPosts.add(
+                                    PostsViewModel(
+                                        if (postData["type"].toString() == "post")
+                                            PostsAdapter.TEXT
+                                        else PostsAdapter.PHOTO,
+                                        postData["content"] as String,
+                                        (postData["timestamp"] as Timestamp).toDate(),
+                                        mapUidNameSurname[postData["user"] as String]
+                                    )
+                                )
+                            }
+                            adapter.notifyItemRangeChanged(0, arrayPosts.size)
+                        }
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.w(ContentValues.TAG, "Error getting documents.", exception)
-                Toast.makeText(requireContext(), "Error connecting to internet", Toast.LENGTH_SHORT)
-                    .show()
             }
     }
 }

@@ -88,9 +88,10 @@ class SignupActivity : AppCompatActivity() {
                     val newUser = hashMapOf(
                         "name" to name,
                         "surname" to surname,
+                        "uid" to user!!.uid
                     )
 
-                    db.collection("users").document(user!!.uid).set(newUser)
+                    db.collection("users").document(user.uid).set(newUser)
                         .addOnSuccessListener { _ ->
                             Log.d(TAG, "DocumentSnapshot added with ID: ${user.uid}")
                             startActivity(Intent(this, GardenSetupActivity::class.java))

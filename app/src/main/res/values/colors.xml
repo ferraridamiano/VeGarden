@@ -12,4 +12,5 @@
     <color name="plotsSeparator">#FF282828</color>
     <color name="textPost">#282828</color>
     <color name="textTimestamp">#606060</color>
+    <color name="userPostTextColor">#000000</color>
 </resources>

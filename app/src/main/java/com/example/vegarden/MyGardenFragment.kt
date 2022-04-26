@@ -182,23 +182,16 @@ class MyGardenFragment : Fragment() {
                     binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
                     val data = ArrayList<PostsViewModel>()
                     documents.forEach { document ->
-                        if (document.data["type"].toString() == "post") {
-                            data.add(
-                                PostsViewModel(
-                                    PostsAdapter.VIEW_TYPE_TEXT,
-                                    document.data["content"] as String,
-                                    (document.data["timestamp"] as Timestamp).toDate()
-                                )
+                        data.add(
+                            PostsViewModel(
+                                if (document.data["type"].toString() == "post")
+                                    PostsAdapter.TEXT
+                                else PostsAdapter.PHOTO,
+                                document.data["content"] as String,
+                                (document.data["timestamp"] as Timestamp).toDate(),
+                                null
                             )
-                        } else { // is a photo
-                            data.add(
-                                PostsViewModel(
-                                    PostsAdapter.VIEW_TYPE_PHOTO,
-                                    document.data["content"] as String,
-                                    (document.data["timestamp"] as Timestamp).toDate()
-                                )
-                            )
-                        }
+                        )
                     }
                     binding.rvPosts.adapter = PostsAdapter(data)
                 }
