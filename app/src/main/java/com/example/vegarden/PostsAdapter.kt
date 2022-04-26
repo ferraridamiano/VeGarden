@@ -39,11 +39,16 @@ class PostsAdapter(private val postsList: List<PostsViewModel>) :
         RecyclerView.ViewHolder(itemView) {
         var imageView: ImageView = itemView.findViewById(R.id.ivPhoto)
         var tvTimestamp: TextView = itemView.findViewById(R.id.tvTimestamp)
+        var tvUser: TextView = itemView.findViewById(R.id.tvUser)
 
         fun bind(position: Int) {
             val recyclerViewModel = postsList[position]
             Picasso.get().load(recyclerViewModel.textOrUrl).into(imageView)
             tvTimestamp.text = getDaysSincePost(recyclerViewModel.timestamp)
+            if (recyclerViewModel.userNameSurname == null)
+                tvUser.visibility = View.GONE
+            else
+                tvUser.text = recyclerViewModel.userNameSurname
         }
     }
 

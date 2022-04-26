@@ -20,20 +20,40 @@
             app:shapeAppearanceOverlay="@style/roundedPhotoPost"
             app:srcCompat="@drawable/plot" />
     </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="38dp"
+        android:background="@drawable/post_timestamp_border"
+        android:paddingHorizontal="5dp"
+        android:paddingBottom="3dp">
+
+        <TextView
+            android:id="@+id/tvUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name Surname"
+            android:textColor="@color/userPostTextColor"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </FrameLayout>
+
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="36dp"
+        android:layout_marginBottom="6dp"
         android:background="@drawable/post_timestamp_border"
-        android:paddingHorizontal="3dp"
-        android:layout_marginBottom="6dp">
+        android:paddingHorizontal="3dp">
 
         <TextView
-            android:layout_margin="3dp"
             android:id="@+id/tvTimestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="3dp"
             android:text="xx days ago"
             android:textColor="@color/textTimestamp"
             android:textSize="14sp" />

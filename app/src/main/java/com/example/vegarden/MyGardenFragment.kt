@@ -1,6 +1,7 @@
 package com.example.vegarden
 
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
@@ -138,6 +139,7 @@ class MyGardenFragment : Fragment() {
                     ref.downloadUrl
                 }.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+                        Log.e(TAG, "Successfulll")
                         val downloadUri = task.result
                         val newPost = hashMapOf(
                             "user" to auth.currentUser!!.uid,
