@@ -2,8 +2,10 @@ package com.example.vegarden
 
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.content.ContentValues.TAG
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.NumberPicker
 import androidx.appcompat.app.AlertDialog
@@ -78,21 +80,21 @@ class ChangeCropActivity : AppCompatActivity() {
 
     }
 
-    fun plantsNumberPicker(): Dialog? {
+    private fun plantsNumberPicker(maxValue: Int = 50): Dialog? {
+        val minValue = 0
         val numberPicker = NumberPicker(this)
-        numberPicker.maxValue = 50
-        numberPicker.minValue = 1
+        numberPicker.maxValue = maxValue
+        numberPicker.minValue = minValue
+        val stringLabels = Array(maxValue - minValue + 1) { i -> if (i > 0) "$i" else "Unknown" }
+        numberPicker.displayedValues = stringLabels
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setTitle("Changing the Hue")
         builder.setMessage("Choose a value :")
-        builder.setPositiveButton("OK",
-            DialogInterface.OnClickListener { dialog, which ->
-                /*dialog.onPositiveButton(
-                    numberPicker.value
-                )*/
-            })
-        builder.setNegativeButton("CANCEL",
-            DialogInterface.OnClickListener { dialog, which ->  })
+        builder.setPositiveButton("OK") { _, _ ->
+            binding.tvPlants.text =
+                if (numberPicker.value == 0) "Unknown" else numberPicker.value.toString()
+        }
+        builder.setNegativeButton("CANCEL") { _, _ -> }
         builder.setView(numberPicker)
         builder.create();
         return builder.show();
