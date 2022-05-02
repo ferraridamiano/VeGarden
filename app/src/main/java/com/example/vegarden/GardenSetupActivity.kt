@@ -115,15 +115,35 @@ class GardenSetupActivity : AppCompatActivity() {
                 "columns" to columns,
             )
 
+            // Generate an empty vegetable garden
+            val plotsRef =
+                db.collection("gardens").document(auth.currentUser!!.uid).collection("plots")
+            db.runBatch { batch ->
+                for (row_number in 0 until rows) {
+                    for (column_number in 0 until columns) {
+                        val mapPlot = GardenPlot(0, null, null, null).toMap()
+                        mapPlot["rowNumber"] = row_number
+                        mapPlot["columnNumber"] = column_number
+                        batch.set(plotsRef.document(), mapPlot)
+                    }
+                }
+            }.addOnCompleteListener {
+                Log.d("GardenFragment", "done")
+            }
+
             db.collection("gardens").document(auth.currentUser!!.uid).set(newGarden)
                 .addOnSuccessListener { _ ->
-                    Log.d(ContentValues.TAG, "DocumentSnapshot added with ID: ${auth.currentUser!!.uid}")
+                    Log.d(
+                        ContentValues.TAG,
+                        "DocumentSnapshot added with ID: ${auth.currentUser!!.uid}"
+                    )
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
                 }
                 .addOnFailureListener { e ->
                     Log.w(ContentValues.TAG, "Error adding document", e)
-                    Toast.makeText(this, "Connection error. Try again later...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Connection error. Try again later...", Toast.LENGTH_SHORT)
+                        .show()
                 }
         }
     }

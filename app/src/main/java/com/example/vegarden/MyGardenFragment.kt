@@ -66,6 +66,10 @@ class MyGardenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Retrieve and convert to object the vegetable garden
+
+
+
         // Plot garden
         var garden: List<View>?
         db.collection("gardens").document(auth.currentUser!!.uid).get()
