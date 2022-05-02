@@ -2,14 +2,14 @@ package com.example.vegarden
 
 import android.app.DatePickerDialog
 import android.app.Dialog
-import android.content.ContentValues.TAG
-import android.content.DialogInterface
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.NumberPicker
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import com.example.vegarden.databinding.ActivityChangeCropBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.SimpleDateFormat
@@ -42,10 +42,40 @@ class ChangeCropActivity : AppCompatActivity() {
 
             MaterialAlertDialogBuilder(this)
                 .setTitle(resources.getString(R.string.crop))
-                .setPositiveButton(resources.getString(R.string.ok)) { dialog, which ->
+                .setPositiveButton(resources.getString(R.string.ok)) { _, _ ->
                     binding.tvCrop.text = cropsList[checkedItem]
+                    when (checkedItem) {
+                        0 -> {
+                            binding.ivPreview.setImageResource(R.drawable.plot_uncultivated)
+                        }
+                        in 1..13 -> {
+                            val layerDrawable = ResourcesCompat.getDrawable(
+                                resources,
+                                R.drawable.plot_vegetables,
+                                null
+                            ) as LayerDrawable
+                            if (checkedItem == 13) { // User clicks on "others"
+                                layerDrawable.setDrawableByLayerId(
+                                    R.id.vegetableImage, ResourcesCompat.getDrawable(
+                                        resources,
+                                        mapVegetableResource[9999]!!,
+                                        null
+                                    )
+                                )
+                            } else {
+                                layerDrawable.setDrawableByLayerId(
+                                    R.id.vegetableImage, ResourcesCompat.getDrawable(
+                                        resources,
+                                        mapVegetableResource[checkedItem]!!,
+                                        null
+                                    )
+                                )
+                            }
+                            binding.ivPreview.setImageDrawable(layerDrawable)
+                        }
+                    }
                 }
-                .setSingleChoiceItems(cropsList, initialCheckedItem) { dialog, which ->
+                .setSingleChoiceItems(cropsList, initialCheckedItem) { _, which ->
                     checkedItem = which
                 }.show()
         }

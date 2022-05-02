@@ -255,7 +255,7 @@ private fun createRow(
 
 private fun createPlot(context: Context): ImageView {
     val imageView = ImageView(context)
-    imageView.setImageResource(R.drawable.plot)
+    imageView.setImageResource(R.drawable.plot_uncultivated)
     imageView.layoutParams = LinearLayout.LayoutParams(
         LinearLayout.LayoutParams.WRAP_CONTENT,
         LinearLayout.LayoutParams.WRAP_CONTENT,

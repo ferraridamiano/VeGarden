@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginVertical="5dp"
     android:gravity="center_vertical">
 
@@ -18,7 +19,7 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             app:shapeAppearanceOverlay="@style/roundedPhotoPost"
-            app:srcCompat="@drawable/plot" />
+            tools:srcCompat="@drawable/plot_uncultivated" />
     </FrameLayout>
 
     <FrameLayout
@@ -33,7 +34,7 @@
             android:id="@+id/tvUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name Surname"
+            tools:text="Name Surname"
             android:textColor="@color/userPostTextColor"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -54,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
-            android:text="xx days ago"
+            tools:text="xx days ago"
             android:textColor="@color/textTimestamp"
             android:textSize="14sp" />
     </FrameLayout>

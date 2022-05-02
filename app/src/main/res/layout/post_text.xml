@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginHorizontal="12dp"
     android:gravity="center_vertical">
 
@@ -17,7 +18,7 @@
             android:id="@+id/tvPostText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="This is a post about my wonderful vegetable garden"
+            tools:text="This is a post about my wonderful vegetable garden"
             android:textColor="@color/textPost"
             android:textSize="18sp" />
     </FrameLayout>
@@ -26,7 +27,7 @@
         android:id="@+id/tvUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name Surname"
+        tools:text="Name Surname"
         android:paddingHorizontal="3dp"
         android:paddingBottom="8dp"
         android:textColor="@color/userPostTextColor"
@@ -44,7 +45,7 @@
         android:background="@color/white"
         android:paddingHorizontal="3dp"
         android:layout_marginBottom="7dp"
-        android:text="xx days ago"
+        tools:text="xx days ago"
         android:textColor="@color/textTimestamp"
         android:textSize="14sp" />
 </FrameLayout>

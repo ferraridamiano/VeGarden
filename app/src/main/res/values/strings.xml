@@ -30,13 +30,15 @@
     <string name="date_of_sowing">Date of sowing</string>
     <string name="number_of_plants">Number of plants</string>
     <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+
     <string name="uncultivated">Uncultivated</string>
-    <string name="watermelon">Watermelon</string>
+    <string name="watermelon">Watermelons</string>
     <string name="broccoli">Broccoli</string>
     <string name="carrots">Carrots</string>
     <string name="cucumbers">Cucumbers</string>
     <string name="corn">Corn</string>
-    <string name="eggplant">Eggplant</string>
+    <string name="eggplant">Eggplants</string>
     <string name="melons">Melons</string>
     <string name="peppers">Peppers</string>
     <string name="peas">Peas</string>
@@ -44,7 +46,6 @@
     <string name="leeks">Leeks</string>
     <string name="radishes">Radishes</string>
     <string name="other">Other</string>
-    <string name="ok">OK</string>
     <string-array name="crops_list">
         <item>@string/uncultivated</item>
         <item>@string/broccoli</item>
