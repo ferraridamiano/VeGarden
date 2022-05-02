@@ -173,6 +173,11 @@ class MyGardenFragment : Fragment() {
     }
 
     private fun refreshPosts() {
+        binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
+        val arrayPosts = ArrayList<PostsViewModel>()
+        val adapter = PostsAdapter(arrayPosts)
+        binding.rvPosts.adapter = adapter
+
         db.collection("posts")
             .whereEqualTo("user", auth.currentUser!!.uid)
             .orderBy("timestamp", Query.Direction.DESCENDING).limit(10)
@@ -181,10 +186,8 @@ class MyGardenFragment : Fragment() {
                 if (documents.isEmpty) {
                     Toast.makeText(requireContext(), "No posts found", Toast.LENGTH_SHORT).show()
                 } else {
-                    binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
-                    val data = ArrayList<PostsViewModel>()
                     documents.forEach { document ->
-                        data.add(
+                        arrayPosts.add(
                             PostsViewModel(
                                 if (document.data["type"].toString() == "post")
                                     PostsAdapter.TEXT
@@ -195,7 +198,7 @@ class MyGardenFragment : Fragment() {
                             )
                         )
                     }
-                    binding.rvPosts.adapter = PostsAdapter(data)
+                    adapter.notifyItemRangeChanged(0, arrayPosts.size)
                 }
             }
             .addOnFailureListener { exception ->

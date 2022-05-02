@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:paddingHorizontal="24dp"
-                android:src="@drawable/plot_cultivated"
+                android:src="@drawable/plot_uncultivated"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

@@ -4,7 +4,6 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.NumberPicker
 import androidx.appcompat.app.AlertDialog
@@ -32,19 +31,18 @@ class ChangeCropActivity : AppCompatActivity() {
     }
 
     private fun setEditableView() {
-        // the user is able to edit the fields
+        var selectedItem = 0
+
         binding.llNotes.visibility = View.GONE
         binding.llCrops.isClickable = true
         binding.llCrops.setOnClickListener {
             val cropsList = resources.getStringArray(R.array.crops_list)
-            val initialCheckedItem = 0
-            var checkedItem = initialCheckedItem
 
             MaterialAlertDialogBuilder(this)
                 .setTitle(resources.getString(R.string.crop))
                 .setPositiveButton(resources.getString(R.string.ok)) { _, _ ->
-                    binding.tvCrop.text = cropsList[checkedItem]
-                    when (checkedItem) {
+                    binding.tvCrop.text = cropsList[selectedItem]
+                    when (selectedItem) {
                         0 -> {
                             binding.ivPreview.setImageResource(R.drawable.plot_uncultivated)
                         }
@@ -54,7 +52,7 @@ class ChangeCropActivity : AppCompatActivity() {
                                 R.drawable.plot_vegetables,
                                 null
                             ) as LayerDrawable
-                            if (checkedItem == 13) { // User clicks on "others"
+                            if (selectedItem == 13) { // User clicks on "others"
                                 layerDrawable.setDrawableByLayerId(
                                     R.id.vegetableImage, ResourcesCompat.getDrawable(
                                         resources,
@@ -66,7 +64,7 @@ class ChangeCropActivity : AppCompatActivity() {
                                 layerDrawable.setDrawableByLayerId(
                                     R.id.vegetableImage, ResourcesCompat.getDrawable(
                                         resources,
-                                        mapVegetableResource[checkedItem]!!,
+                                        mapVegetableResource[selectedItem]!!,
                                         null
                                     )
                                 )
@@ -75,8 +73,8 @@ class ChangeCropActivity : AppCompatActivity() {
                         }
                     }
                 }
-                .setSingleChoiceItems(cropsList, initialCheckedItem) { _, which ->
-                    checkedItem = which
+                .setSingleChoiceItems(cropsList, selectedItem) { _, which ->
+                    selectedItem = which
                 }.show()
         }
         binding.llSowingDate.isClickable = true
