@@ -42,36 +42,7 @@ class ChangeCropActivity : AppCompatActivity() {
                 .setTitle(resources.getString(R.string.crop))
                 .setPositiveButton(resources.getString(R.string.ok)) { _, _ ->
                     binding.tvCrop.text = cropsList[selectedItem]
-                    when (selectedItem) {
-                        0 -> {
-                            binding.ivPreview.setImageResource(R.drawable.plot_uncultivated)
-                        }
-                        in 1..13 -> {
-                            val layerDrawable = ResourcesCompat.getDrawable(
-                                resources,
-                                R.drawable.plot_vegetables,
-                                null
-                            ) as LayerDrawable
-                            if (selectedItem == 13) { // User clicks on "others"
-                                layerDrawable.setDrawableByLayerId(
-                                    R.id.vegetableImage, ResourcesCompat.getDrawable(
-                                        resources,
-                                        mapVegetableResource[9999]!!,
-                                        null
-                                    )
-                                )
-                            } else {
-                                layerDrawable.setDrawableByLayerId(
-                                    R.id.vegetableImage, ResourcesCompat.getDrawable(
-                                        resources,
-                                        mapVegetableResource[selectedItem]!!,
-                                        null
-                                    )
-                                )
-                            }
-                            binding.ivPreview.setImageDrawable(layerDrawable)
-                        }
-                    }
+                    binding.ivPreview.setImageDrawable(getPlotDrawable(this, selectedItem))
                 }
                 .setSingleChoiceItems(cropsList, selectedItem) { _, which ->
                     selectedItem = which

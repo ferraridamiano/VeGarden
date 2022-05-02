@@ -1,8 +1,10 @@
 package com.example.vegarden
-import android.util.Patterns
 
-fun String?.isValidEmail() : Boolean = !isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
-fun String?.isValidPassword() : Boolean = !isNullOrEmpty() && this.length >= 8
+import android.content.Context
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
+import android.util.Patterns
+import androidx.core.content.res.ResourcesCompat
 
 val mapVegetableResource = hashMapOf<Int, Int>(
     1 to R.drawable.veg_broccoli,
@@ -19,3 +21,44 @@ val mapVegetableResource = hashMapOf<Int, Int>(
     12 to R.drawable.veg_watermelons,
     9999 to R.drawable.veg_other,
 )
+
+fun String?.isValidEmail(): Boolean =
+    !isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
+
+fun String?.isValidPassword(): Boolean = !isNullOrEmpty() && this.length >= 8
+
+fun getPlotDrawable(context: Context, cropID: Int): Drawable {
+    return when (cropID) {
+        0 -> {
+            ResourcesCompat.getDrawable(context.resources, R.drawable.plot_uncultivated, null)!!
+        }
+        in 1..13 -> {
+            val layerDrawable = ResourcesCompat.getDrawable(
+                context.resources,
+                R.drawable.plot_vegetables,
+                null
+            ) as LayerDrawable
+            if (cropID == 13) { // User clicks on "others"
+                layerDrawable.setDrawableByLayerId(
+                    R.id.vegetableImage, ResourcesCompat.getDrawable(
+                        context.resources,
+                        mapVegetableResource[9999]!!,
+                        null
+                    )
+                )
+            } else {
+                layerDrawable.setDrawableByLayerId(
+                    R.id.vegetableImage, ResourcesCompat.getDrawable(
+                        context.resources,
+                        mapVegetableResource[cropID]!!,
+                        null
+                    )
+                )
+            }
+            layerDrawable
+        }
+        else -> {
+            ResourcesCompat.getDrawable(context.resources, R.drawable.plot_uncultivated, null)!!
+        }
+    }
+}

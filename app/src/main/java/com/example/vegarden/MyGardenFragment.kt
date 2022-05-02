@@ -2,9 +2,9 @@ package com.example.vegarden
 
 import android.content.ContentValues
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,7 +29,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
-import java.util.Calendar
+import java.util.*
 import kotlin.collections.ArrayList
 
 class MyGardenFragment : Fragment() {
@@ -66,27 +66,65 @@ class MyGardenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Retrieve and convert to object the vegetable garden
-
-
-
         // Plot garden
         var garden: List<View>?
         db.collection("gardens").document(auth.currentUser!!.uid).get()
             .addOnSuccessListener { document ->
                 val data = document.data!!.toMap()
-                val rows = data["rows"].toString().toInt()
-                val cols = data["columns"].toString().toInt()
-                garden = createVegetableGarden(
-                    requireContext(),
-                    rows,
-                    cols,
-                    ResourcesCompat.getDrawable(resources, R.color.plotsSeparator, null)!!,
-                    resources.getDimension(R.dimen.plotsSeparatorSize).toInt()
-                )
-                binding.garden.removeAllViews()
-                garden!!.forEach { binding.garden.addView(it) }
-                binding.progressBar.visibility = View.GONE
+                val rows = (data["rows"] as Long).toInt()
+                val cols = (data["columns"] as Long).toInt()
+
+                // Retrieve and convert to object the vegetable garden
+                db.collection("gardens").document(auth.currentUser!!.uid).collection("plots").get()
+                    .addOnSuccessListener { plots ->
+                        val gardenList = arrayListOf<GardenPlot>()
+                        val positions = arrayListOf<Pair<Int, Int>>()
+                        plots.forEach { plot ->
+                            Log.e("Damiano", (plot.data["cropID"] as Long).toString())
+                            gardenList.add(
+                                GardenPlot(
+                                    (plot.data["cropID"] as Long).toInt(),
+                                    plot.data["sowingDate"] as Date?,
+                                    (plot.data["numberOfPlants"] as Long?)?.toInt(),
+                                    plot.data["userNotes"] as String?
+                                )
+                            )
+                            positions.add(
+                                Pair(
+                                    (plot.data["rowNumber"] as Long).toInt(),
+                                    (plot.data["columnNumber"] as Long).toInt()
+                                )
+                            )
+                        }
+                        // Here we convert a list in a grid (matrix) of plots
+                        val gardenMatrix = arrayListOf<ArrayList<GardenPlot>>()
+                        for (i in 0 until rows) {
+                            val gardenRow = arrayListOf<GardenPlot>()
+                            for (j in 0 until cols) {
+                                for (k in 0 until gardenList.size) {
+                                    val position = positions[k]
+                                    if (position.first == i && position.second == j) {
+                                        gardenRow.add(gardenList[k])
+                                        gardenList.removeAt(k)
+                                        positions.removeAt(k)
+                                        break
+                                    }
+                                }
+                            }
+                            gardenMatrix.add(gardenRow)
+                        }
+
+                        garden = createVegetableGarden(
+                            gardenMatrix,
+                            ResourcesCompat.getDrawable(resources, R.color.plotsSeparator, null)!!,
+                            resources.getDimension(R.dimen.plotsSeparatorSize).toInt()
+                        )
+                        binding.garden.removeAllViews()
+                        garden!!.forEach { binding.garden.addView(it) }
+                        binding.progressBar.visibility = View.GONE
+
+                    }
+
             }
             .addOnFailureListener { exception ->
                 Log.w(ContentValues.TAG, "Error getting documents.", exception)
@@ -211,67 +249,65 @@ class MyGardenFragment : Fragment() {
                     .show()
             }
     }
-}
 
-private fun createVegetableGarden(
-    context: Context,
-    rows: Int,
-    columns: Int,
-    separatorColor: Drawable,
-    separatorSize: Int
-): List<View> {
-    val listOfRows = mutableListOf<View>()
-    // create a list with [rows] rows and [columns] columns
-    for (i in 1..rows) {
-        listOfRows.add(createRow(context, columns, separatorColor, separatorSize))
-        val separator = View(context)
-        separator.layoutParams =
-            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, separatorSize)
-        separator.background = separatorColor
-        listOfRows.add(separator)
+    private fun createVegetableGarden(
+        garden: ArrayList<ArrayList<GardenPlot>>,
+        separatorColor: Drawable,
+        separatorSize: Int
+    ): List<View> {
+        val listOfRows = mutableListOf<View>()
+        // create a list with [rows] rows and [columns] columns
+        for (gardenRow in garden) {
+            listOfRows.add(createRow(gardenRow, separatorColor, separatorSize))
+            val separator = View(requireContext())
+            separator.layoutParams =
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, separatorSize)
+            separator.background = separatorColor
+            listOfRows.add(separator)
+        }
+        listOfRows.removeAt(listOfRows.size - 1) // Removes latest separator
+        return listOfRows.toList()
     }
-    listOfRows.removeAt(listOfRows.size - 1) // Removes latest separator
-    return listOfRows.toList()
-}
 
-private fun createRow(
-    context: Context,
-    count: Int,
-    separatorColor: Drawable,
-    separatorSize: Int
-): LinearLayout {
-    // Create a row with an horizontal linear layout
-    val row = LinearLayout(context)
-    row.orientation = LinearLayout.HORIZONTAL
-    row.layoutParams = LinearLayout.LayoutParams(
-        LinearLayout.LayoutParams.MATCH_PARENT,
-        LinearLayout.LayoutParams.WRAP_CONTENT
-    )
-    // Then add [count] plot to the row
-    for (i in 1..count) {
-        row.addView(createPlot(context))
-        val separator = View(context)
-        separator.layoutParams =
-            LinearLayout.LayoutParams(separatorSize, LinearLayout.LayoutParams.MATCH_PARENT)
-        separator.background = separatorColor
-        row.addView(separator)
+    private fun createRow(
+        gardenRow: ArrayList<GardenPlot>,
+        separatorColor: Drawable,
+        separatorSize: Int
+    ): LinearLayout {
+        // Create a row with an horizontal linear layout
+        val row = LinearLayout(requireContext())
+        row.orientation = LinearLayout.HORIZONTAL
+        row.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        // Then add [count] plot to the row
+        for (plot in gardenRow) {
+            row.addView(createPlot(plot))
+            val separator = View(requireContext())
+            separator.layoutParams =
+                LinearLayout.LayoutParams(separatorSize, LinearLayout.LayoutParams.MATCH_PARENT)
+            separator.background = separatorColor
+            row.addView(separator)
+        }
+        row.removeViewAt(row.childCount - 1)  // Removes latest separator
+        return row
     }
-    row.removeViewAt(row.childCount - 1)  // Removes latest separator
-    return row
-}
 
-private fun createPlot(context: Context): ImageView {
-    val imageView = ImageView(context)
-    imageView.setImageResource(R.drawable.plot_uncultivated)
-    imageView.layoutParams = LinearLayout.LayoutParams(
-        LinearLayout.LayoutParams.WRAP_CONTENT,
-        LinearLayout.LayoutParams.WRAP_CONTENT,
-        1.0f
-    )
-    imageView.adjustViewBounds = true
-    imageView.isClickable = true
-    imageView.setOnClickListener {
-        context.startActivity(Intent(context, ChangeCropActivity::class.java))
+    private fun createPlot(plot: GardenPlot): ImageView {
+        val imageView = ImageView(requireContext())
+        imageView.setImageDrawable(getPlotDrawable(requireContext(), plot.cropID))
+
+        imageView.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            1.0f
+        )
+        imageView.adjustViewBounds = true
+        imageView.isClickable = true
+        imageView.setOnClickListener {
+            startActivity(Intent(requireContext(), ChangeCropActivity::class.java))
+        }
+        return imageView
     }
-    return imageView
 }
