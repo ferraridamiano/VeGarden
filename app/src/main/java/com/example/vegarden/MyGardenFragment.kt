@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,7 +28,9 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
-import java.util.*
+import java.io.Serializable
+import java.util.Calendar
+import java.util.Date
 import kotlin.collections.ArrayList
 
 class MyGardenFragment : Fragment() {
@@ -306,7 +307,9 @@ class MyGardenFragment : Fragment() {
         imageView.adjustViewBounds = true
         imageView.isClickable = true
         imageView.setOnClickListener {
-            startActivity(Intent(requireContext(), ChangeCropActivity::class.java))
+            val intent = Intent(requireContext(), ChangeCropActivity::class.java)
+            intent.putExtra("gardenPlot", plot as Serializable)
+            startActivity(intent)
         }
         return imageView
     }

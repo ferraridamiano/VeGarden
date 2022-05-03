@@ -1,5 +1,6 @@
 package com.example.vegarden
 
+import java.io.Serializable
 import java.util.Date
 
 class GardenPlot(
@@ -7,8 +8,8 @@ class GardenPlot(
     val sowingDate: Date?,
     val numberOfPlants: Int?,
     val userNotes: String?,
-){
-    fun toMap() : MutableMap<String, Any?> {
+) : Serializable {
+    fun toMap(): MutableMap<String, Any?> {
         return mutableMapOf(
             "cropID" to cropID,
             "sowingDate" to sowingDate,
@@ -17,7 +18,3 @@ class GardenPlot(
         )
     }
 }
-
-data class GardenModel(
-    val rows: ArrayList<ArrayList<GardenPlot>>
-)
