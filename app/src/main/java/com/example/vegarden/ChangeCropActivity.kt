@@ -5,18 +5,26 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import android.widget.NumberPicker
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.vegarden.databinding.ActivityChangeCropBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class ChangeCropActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChangeCropBinding
+    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
 
     private var selectedCrop: Int = 0
     private var selectedNumberOfPlants: Int? = null
@@ -28,12 +36,13 @@ class ChangeCropActivity : AppCompatActivity() {
         binding = ActivityChangeCropBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        auth = Firebase.auth
+        db = Firebase.firestore
+
         val gardenPlot = intent.getSerializableExtra("gardenPlot") as GardenPlot
-        setEditableView(gardenPlot)
+        val rowNumber = intent.getIntExtra("rowNumber", 0)
+        val columnNumber = intent.getIntExtra("columnNumber", 0)
 
-    }
-
-    private fun setEditableView(gardenPlot: GardenPlot) {
         val cropsList = resources.getStringArray(R.array.crops_list)
 
         selectedCrop = gardenPlot.cropID
@@ -74,6 +83,28 @@ class ChangeCropActivity : AppCompatActivity() {
         binding.llNumberPlants.isClickable = true
         binding.llNumberPlants.setOnClickListener {
             plantsNumberPicker(selectedNumberOfPlants)
+        }
+
+        binding.fabConfirm.setOnClickListener {
+
+            val confirmedPlot = GardenPlot(
+                selectedCrop,
+                selectedSowingDate,
+                selectedNumberOfPlants,
+                binding.etNotes.text.toString()
+            )
+            db.collection("gardens")
+                .document(auth.currentUser!!.uid)
+                .collection("plots")
+                .whereEqualTo("columnNumber", columnNumber)
+                .whereEqualTo("rowNumber", rowNumber)
+                .get().addOnSuccessListener {
+                    val reference = it.first().reference
+                    reference.update(confirmedPlot.toMap()).addOnSuccessListener {
+                        Toast.makeText(this, "Plot saved", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                }
         }
     }
 

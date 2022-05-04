@@ -1,7 +1,6 @@
 package com.example.vegarden
 
 import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -66,71 +65,8 @@ class MyGardenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Plot garden
-        var garden: List<View>?
-        db.collection("gardens").document(auth.currentUser!!.uid).get()
-            .addOnSuccessListener { document ->
-                val data = document.data!!.toMap()
-                val rows = (data["rows"] as Long).toInt()
-                val cols = (data["columns"] as Long).toInt()
-
-                // Retrieve and convert to object the vegetable garden
-                db.collection("gardens").document(auth.currentUser!!.uid).collection("plots").get()
-                    .addOnSuccessListener { plots ->
-                        val gardenList = arrayListOf<GardenPlot>()
-                        val positions = arrayListOf<Pair<Int, Int>>()
-                        plots.forEach { plot ->
-                            Log.e("Damiano", (plot.data["cropID"] as Long).toString())
-                            gardenList.add(
-                                GardenPlot(
-                                    (plot.data["cropID"] as Long).toInt(),
-                                    plot.data["sowingDate"] as Date?,
-                                    (plot.data["numberOfPlants"] as Long?)?.toInt(),
-                                    plot.data["userNotes"] as String?
-                                )
-                            )
-                            positions.add(
-                                Pair(
-                                    (plot.data["rowNumber"] as Long).toInt(),
-                                    (plot.data["columnNumber"] as Long).toInt()
-                                )
-                            )
-                        }
-                        // Here we convert a list in a grid (matrix) of plots
-                        val gardenMatrix = arrayListOf<ArrayList<GardenPlot>>()
-                        for (i in 0 until rows) {
-                            val gardenRow = arrayListOf<GardenPlot>()
-                            for (j in 0 until cols) {
-                                for (k in 0 until gardenList.size) {
-                                    val position = positions[k]
-                                    if (position.first == i && position.second == j) {
-                                        gardenRow.add(gardenList[k])
-                                        gardenList.removeAt(k)
-                                        positions.removeAt(k)
-                                        break
-                                    }
-                                }
-                            }
-                            gardenMatrix.add(gardenRow)
-                        }
-
-                        garden = createVegetableGarden(
-                            gardenMatrix,
-                            ResourcesCompat.getDrawable(resources, R.color.plotsSeparator, null)!!,
-                            resources.getDimension(R.dimen.plotsSeparatorSize).toInt()
-                        )
-                        binding.garden.removeAllViews()
-                        garden!!.forEach { binding.garden.addView(it) }
-                        binding.progressBar.visibility = View.GONE
-
-                    }
-
-            }
-            .addOnFailureListener { exception ->
-                Log.w(ContentValues.TAG, "Error getting documents.", exception)
-            }
-
+        // Get garden and refresh thew fragment
+        refreshGarden()
         // Retrieve and display posts
         refreshPosts()
 
@@ -182,7 +118,6 @@ class MyGardenFragment : Fragment() {
                     ref.downloadUrl
                 }.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Log.e(TAG, "Successfulll")
                         val downloadUri = task.result
                         val newPost = hashMapOf(
                             "user" to auth.currentUser!!.uid,
@@ -212,7 +147,72 @@ class MyGardenFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        refreshGarden()
         refreshPosts()
+    }
+
+    private fun refreshGarden() {
+        var garden: List<View>?
+        db.collection("gardens").document(auth.currentUser!!.uid).get()
+            .addOnSuccessListener { document ->
+                val data = document.data!!.toMap()
+                val rows = (data["rows"] as Long).toInt()
+                val cols = (data["columns"] as Long).toInt()
+
+                // Retrieve and convert to object the vegetable garden
+                db.collection("gardens").document(auth.currentUser!!.uid).collection("plots").get()
+                    .addOnSuccessListener { plots ->
+                        val gardenList = arrayListOf<GardenPlot>()
+                        val positions = arrayListOf<Pair<Int, Int>>()
+                        plots.forEach { plot ->
+                            gardenList.add(
+                                GardenPlot(
+                                    (plot.data["cropID"] as Long).toInt(),
+                                    plot.data["sowingDate"] as Date?,
+                                    (plot.data["numberOfPlants"] as Long?)?.toInt(),
+                                    plot.data["userNotes"] as String?
+                                )
+                            )
+                            positions.add(
+                                Pair(
+                                    (plot.data["rowNumber"] as Long).toInt(),
+                                    (plot.data["columnNumber"] as Long).toInt()
+                                )
+                            )
+                        }
+                        // Here we convert a list in a grid (matrix) of plots
+                        val gardenMatrix = arrayListOf<ArrayList<GardenPlot>>()
+                        for (i in 0 until rows) {
+                            val gardenRow = arrayListOf<GardenPlot>()
+                            for (j in 0 until cols) {
+                                for (k in 0 until gardenList.size) {
+                                    val position = positions[k]
+                                    if (position.first == i && position.second == j) {
+                                        gardenRow.add(gardenList[k])
+                                        gardenList.removeAt(k)
+                                        positions.removeAt(k)
+                                        break
+                                    }
+                                }
+                            }
+                            gardenMatrix.add(gardenRow)
+                        }
+
+                        garden = createVegetableGarden(
+                            gardenMatrix,
+                            ResourcesCompat.getDrawable(resources, R.color.plotsSeparator, null)!!,
+                            resources.getDimension(R.dimen.plotsSeparatorSize).toInt()
+                        )
+                        binding.garden.removeAllViews()
+                        garden!!.forEach { binding.garden.addView(it) }
+                        binding.progressBar.visibility = View.GONE
+
+                    }
+
+            }
+            .addOnFailureListener { exception ->
+                Log.w(ContentValues.TAG, "Error getting documents.", exception)
+            }
     }
 
     private fun refreshPosts() {
@@ -258,8 +258,8 @@ class MyGardenFragment : Fragment() {
     ): List<View> {
         val listOfRows = mutableListOf<View>()
         // create a list with [rows] rows and [columns] columns
-        for (gardenRow in garden) {
-            listOfRows.add(createRow(gardenRow, separatorColor, separatorSize))
+        garden.forEachIndexed { index, gardenRow ->
+            listOfRows.add(createRow(gardenRow, index, separatorColor, separatorSize))
             val separator = View(requireContext())
             separator.layoutParams =
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, separatorSize)
@@ -272,6 +272,7 @@ class MyGardenFragment : Fragment() {
 
     private fun createRow(
         gardenRow: ArrayList<GardenPlot>,
+        rowNumber: Int,
         separatorColor: Drawable,
         separatorSize: Int
     ): LinearLayout {
@@ -283,8 +284,8 @@ class MyGardenFragment : Fragment() {
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         // Then add [count] plot to the row
-        for (plot in gardenRow) {
-            row.addView(createPlot(plot))
+        gardenRow.forEachIndexed { index, plot ->
+            row.addView(createPlot(plot, rowNumber, index))
             val separator = View(requireContext())
             separator.layoutParams =
                 LinearLayout.LayoutParams(separatorSize, LinearLayout.LayoutParams.MATCH_PARENT)
@@ -295,7 +296,7 @@ class MyGardenFragment : Fragment() {
         return row
     }
 
-    private fun createPlot(plot: GardenPlot): ImageView {
+    private fun createPlot(plot: GardenPlot, rowNumber: Int, columnNumber: Int): ImageView {
         val imageView = ImageView(requireContext())
         imageView.setImageDrawable(getPlotDrawable(requireContext(), plot.cropID))
 
@@ -309,6 +310,8 @@ class MyGardenFragment : Fragment() {
         imageView.setOnClickListener {
             val intent = Intent(requireContext(), ChangeCropActivity::class.java)
             intent.putExtra("gardenPlot", plot as Serializable)
+            intent.putExtra("rowNumber", rowNumber)
+            intent.putExtra("columnNumber", columnNumber)
             startActivity(intent)
         }
         return imageView
