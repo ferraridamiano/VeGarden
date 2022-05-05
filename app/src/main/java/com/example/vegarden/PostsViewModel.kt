@@ -6,5 +6,6 @@ data class PostsViewModel(
     val viewType: Int,
     val textOrUrl: String?,
     val timestamp: Date,
-    val userNameSurname: String?
+    val userNameSurname: String?,
+    val postUserUid: String,
 )

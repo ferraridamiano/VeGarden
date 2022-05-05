@@ -17,8 +17,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vegarden.databinding.FragmentMyGardenBinding
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -34,10 +32,10 @@ import kotlin.collections.ArrayList
 
 class MyGardenFragment : Fragment() {
 
-    private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
     private var _binding: FragmentMyGardenBinding? = null
+    private lateinit var gardenUserUid : String
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
@@ -47,6 +45,7 @@ class MyGardenFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        gardenUserUid = arguments?.getString("gardenUserUid")!!
         _binding = FragmentMyGardenBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -58,7 +57,6 @@ class MyGardenFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        auth = Firebase.auth
         db = Firebase.firestore
         storage = Firebase.storage
     }
@@ -108,7 +106,7 @@ class MyGardenFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.GetContent()) { imageUri ->
             if (imageUri != null) {
                 val ref =
-                    storage.reference.child("images/${auth.currentUser!!.uid}-${System.currentTimeMillis()}")
+                    storage.reference.child("images/$gardenUserUid-${System.currentTimeMillis()}")
                 ref.putFile(imageUri).continueWithTask { task ->
                     if (!task.isSuccessful) {
                         task.exception?.let {
@@ -120,7 +118,7 @@ class MyGardenFragment : Fragment() {
                     if (task.isSuccessful) {
                         val downloadUri = task.result
                         val newPost = hashMapOf(
-                            "user" to auth.currentUser!!.uid,
+                            "user" to gardenUserUid,
                             "type" to "photo",
                             "content" to downloadUri,
                             "timestamp" to Calendar.getInstance().time
@@ -153,14 +151,14 @@ class MyGardenFragment : Fragment() {
 
     private fun refreshGarden() {
         var garden: List<View>?
-        db.collection("gardens").document(auth.currentUser!!.uid).get()
+        db.collection("gardens").document(gardenUserUid).get()
             .addOnSuccessListener { document ->
                 val data = document.data!!.toMap()
                 val rows = (data["rows"] as Long).toInt()
                 val cols = (data["columns"] as Long).toInt()
 
                 // Retrieve and convert to object the vegetable garden
-                db.collection("gardens").document(auth.currentUser!!.uid).collection("plots").get()
+                db.collection("gardens").document(gardenUserUid).collection("plots").get()
                     .addOnSuccessListener { plots ->
                         val gardenList = arrayListOf<GardenPlot>()
                         val positions = arrayListOf<Pair<Int, Int>>()
@@ -222,7 +220,7 @@ class MyGardenFragment : Fragment() {
         binding.rvPosts.adapter = adapter
 
         db.collection("posts")
-            .whereEqualTo("user", auth.currentUser!!.uid)
+            .whereEqualTo("user", gardenUserUid)
             .orderBy("timestamp", Query.Direction.DESCENDING).limit(10)
             .get()
             .addOnSuccessListener { documents ->
@@ -237,7 +235,8 @@ class MyGardenFragment : Fragment() {
                                 else PostsAdapter.PHOTO,
                                 document.data["content"] as String,
                                 (document.data["timestamp"] as Timestamp).toDate(),
-                                null
+                                null,
+                                gardenUserUid
                             )
                         )
                     }

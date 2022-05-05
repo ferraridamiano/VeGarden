@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.vegarden.databinding.ActivityMainBinding
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,9 +16,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val auth = Firebase.auth
+
         val myGardenFragment = MyGardenFragment()
         val exploreFragment = ExploreFragment()
         val settingsFragment = SettingsFragment()
+
+        val bundle = Bundle()
+        bundle.putString("gardenUserUid", auth.currentUser!!.uid)
+        myGardenFragment.arguments = bundle
 
         setCurrentFragment(myGardenFragment)
 

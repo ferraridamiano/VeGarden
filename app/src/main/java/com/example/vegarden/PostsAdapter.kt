@@ -1,14 +1,16 @@
 package com.example.vegarden
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import java.util.Date
-import java.util.Calendar
+import java.util.*
+
 
 class PostsAdapter(private val postsList: List<PostsViewModel>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -30,8 +32,19 @@ class PostsAdapter(private val postsList: List<PostsViewModel>) :
             tvTimestamp.text = getDaysSincePost(recyclerViewModel.timestamp)
             if (recyclerViewModel.userNameSurname == null)
                 tvUser.visibility = View.GONE
-            else
+            else {
                 tvUser.text = recyclerViewModel.userNameSurname
+                tvUser.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putString("gardenUserUid", recyclerViewModel.postUserUid)
+                    val gardenFragment = MyGardenFragment()
+                    gardenFragment.arguments = bundle
+                    val activity = itemView.context as AppCompatActivity
+                    activity.supportFragmentManager.beginTransaction()
+                        .replace(R.id.flFragment, gardenFragment)
+                        .addToBackStack(null).commit()
+                }
+            }
         }
     }
 
@@ -47,8 +60,19 @@ class PostsAdapter(private val postsList: List<PostsViewModel>) :
             tvTimestamp.text = getDaysSincePost(recyclerViewModel.timestamp)
             if (recyclerViewModel.userNameSurname == null)
                 tvUser.visibility = View.GONE
-            else
+            else {
                 tvUser.text = recyclerViewModel.userNameSurname
+                tvUser.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putString("gardenUserUid", recyclerViewModel.postUserUid)
+                    val gardenFragment = MyGardenFragment()
+                    gardenFragment.arguments = bundle
+                    val activity = itemView.context as AppCompatActivity
+                    activity.supportFragmentManager.beginTransaction()
+                        .replace(R.id.flFragment, gardenFragment)
+                        .addToBackStack(null).commit()
+                }
+            }
         }
     }
 
