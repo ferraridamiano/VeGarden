@@ -42,6 +42,8 @@ class ChangeCropActivity : AppCompatActivity() {
         val gardenPlot = intent.getSerializableExtra("gardenPlot") as GardenPlot
         val rowNumber = intent.getIntExtra("rowNumber", 0)
         val columnNumber = intent.getIntExtra("columnNumber", 0)
+        val isMyGarden = intent.getBooleanExtra("isMyGarden", false)
+        val gardenUserUid = intent.getStringExtra("gardenUserUid")!!
 
         val cropsList = resources.getStringArray(R.array.crops_list)
 
@@ -58,54 +60,81 @@ class ChangeCropActivity : AppCompatActivity() {
         binding.tvPlants.text =
             if (gardenPlot.numberOfPlants == null) resources.getString(R.string.unknown)
             else gardenPlot.numberOfPlants.toString()
-        //Set user's notes
-        binding.etNotes.setText(gardenPlot.userNotes)
 
-        binding.llNotes.visibility = View.GONE
-        binding.llCrops.isClickable = true
-        binding.llCrops.setOnClickListener {
+        // If it is my garden, then the user can edit everything and save
+        if (isMyGarden) {
+            //Set user's notes
+            binding.etNotes.hint = resources.getString(R.string.my_notes)
+            binding.etNotes.setText(gardenPlot.userNotes)
 
-            MaterialAlertDialogBuilder(this)
-                .setTitle(resources.getString(R.string.crop))
-                .setPositiveButton(resources.getString(R.string.ok)) { _, _ ->
-                    binding.tvCrop.text = cropsList[selectedCrop]
-                    binding.ivPreview.setImageDrawable(getPlotDrawable(this, selectedCrop))
-                }
-                .setSingleChoiceItems(cropsList, selectedCrop) { _, which ->
-                    selectedCrop = which
-                }.show()
-        }
-        binding.llSowingDate.isClickable = true
-        binding.llSowingDate.setOnClickListener {
-            sowingDatePicker(selectedSowingDate)
-        }
+            binding.llNotes.visibility = View.GONE
 
-        binding.llNumberPlants.isClickable = true
-        binding.llNumberPlants.setOnClickListener {
-            plantsNumberPicker(selectedNumberOfPlants)
-        }
+            binding.llCrops.isClickable = true
+            binding.llCrops.setOnClickListener {
 
-        binding.fabConfirm.setOnClickListener {
-
-            val confirmedPlot = GardenPlot(
-                selectedCrop,
-                selectedSowingDate,
-                selectedNumberOfPlants,
-                binding.etNotes.text.toString()
-            )
-            db.collection("gardens")
-                .document(auth.currentUser!!.uid)
-                .collection("plots")
-                .whereEqualTo("columnNumber", columnNumber)
-                .whereEqualTo("rowNumber", rowNumber)
-                .get().addOnSuccessListener {
-                    val reference = it.first().reference
-                    reference.update(confirmedPlot.toMap()).addOnSuccessListener {
-                        Toast.makeText(this, "Plot saved", Toast.LENGTH_SHORT).show()
-                        finish()
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(resources.getString(R.string.crop))
+                    .setPositiveButton(resources.getString(R.string.ok)) { _, _ ->
+                        binding.tvCrop.text = cropsList[selectedCrop]
+                        binding.ivPreview.setImageDrawable(getPlotDrawable(this, selectedCrop))
                     }
-                }
+                    .setSingleChoiceItems(cropsList, selectedCrop) { _, which ->
+                        selectedCrop = which
+                    }.show()
+            }
+            binding.llSowingDate.isClickable = true
+            binding.llSowingDate.setOnClickListener {
+                sowingDatePicker(selectedSowingDate)
+            }
+
+            binding.llNumberPlants.isClickable = true
+            binding.llNumberPlants.setOnClickListener {
+                plantsNumberPicker(selectedNumberOfPlants)
+            }
+
+            binding.fabConfirm.setOnClickListener {
+
+                val confirmedPlot = GardenPlot(
+                    selectedCrop,
+                    selectedSowingDate,
+                    selectedNumberOfPlants,
+                    binding.etNotes.text.toString()
+                )
+                db.collection("gardens")
+                    .document(auth.currentUser!!.uid)
+                    .collection("plots")
+                    .whereEqualTo("columnNumber", columnNumber)
+                    .whereEqualTo("rowNumber", rowNumber)
+                    .get().addOnSuccessListener {
+                        val reference = it.first().reference
+                        reference.update(confirmedPlot.toMap()).addOnSuccessListener {
+                            Toast.makeText(this, "Plot saved", Toast.LENGTH_SHORT).show()
+                            finish()
+                        }
+                    }
+            }
         }
+        // Otherwise it will able just to see the data
+        else {
+            // If there are not notes it will not show anything
+            if (gardenPlot.userNotes.isNullOrBlank()) {
+                binding.llNotes.visibility = View.GONE
+            } else {
+                //Set user's notes
+                db.collection("users").document(gardenUserUid).get()
+                    .addOnSuccessListener { document ->
+                        val name = document["name"] as String
+                        binding.tvLabelNotes.text = getString(R.string.user_notes, name)
+                    }
+                binding.tvNotes.text = gardenPlot.userNotes
+            }
+
+            binding.tilNotes.visibility = View.GONE
+
+            binding.fabConfirm.visibility = View.GONE
+
+        }
+
     }
 
     private fun sowingDatePicker(initialDate: Date?) {

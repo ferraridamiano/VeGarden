@@ -178,7 +178,7 @@ class MyGardenFragment : Fragment() {
                             gardenList.add(
                                 GardenPlot(
                                     (plot.data["cropID"] as Long).toInt(),
-                                    plot.data["sowingDate"] as Date?,
+                                    (plot.data["sowingDate"] as Timestamp?)?.toDate(),
                                     (plot.data["numberOfPlants"] as Long?)?.toInt(),
                                     plot.data["userNotes"] as String?
                                 )
@@ -323,6 +323,8 @@ class MyGardenFragment : Fragment() {
             intent.putExtra("gardenPlot", plot as Serializable)
             intent.putExtra("rowNumber", rowNumber)
             intent.putExtra("columnNumber", columnNumber)
+            intent.putExtra("isMyGarden", isMyGarden)
+            intent.putExtra("gardenUserUid", gardenUserUid)
             startActivity(intent)
         }
         return imageView

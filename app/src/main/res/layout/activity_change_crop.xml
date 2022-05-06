@@ -47,7 +47,7 @@
                     android:id="@+id/tvCrop"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Uncultivated" />
+                    tools:text="Uncultivated" />
             </LinearLayout>
 
             <View
@@ -76,7 +76,7 @@
                     android:id="@+id/tvDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="16/04/2022   (10 days ago)" />
+                    tools:text="16/04/2022   (10 days ago)" />
             </LinearLayout>
 
             <View
@@ -105,7 +105,7 @@
                     android:id="@+id/tvPlants"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="30" />
+                    tools:text="30" />
             </LinearLayout>
 
             <View
@@ -123,13 +123,14 @@
                 android:paddingVertical="8dp">
 
                 <TextView
+                    android:id="@+id/tvLabelNotes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:layout_marginBottom="4dp"
-                    android:text="User's notes"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    tools:text="@string/user_notes" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -138,9 +139,10 @@
                     android:padding="12dp">
 
                     <TextView
+                        android:id="@+id/tvNotes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Here will be written some notes from the user" />
+                        tools:text="Here will be written some notes from the user" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -157,7 +159,7 @@
                     android:id="@+id/etNotes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="User's notes"
+                    android:hint="@string/my_notes"
                     android:inputType="textMultiLine|textCapSentences" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
