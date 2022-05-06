@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="16dp"
-                android:text="My posts and photos"
+                tools:text="@string/my_posts_and_photos"
                 android:textColor="@color/black"
                 android:textSize="28sp"
                 app:layout_constraintStart_toStartOf="parent"

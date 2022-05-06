@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         val bundle = Bundle()
         bundle.putString("gardenUserUid", auth.currentUser!!.uid)
+        bundle.putBoolean("isMyGarden", true)
         myGardenFragment.arguments = bundle
 
         setCurrentFragment(myGardenFragment)

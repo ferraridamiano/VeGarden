@@ -35,7 +35,8 @@ class MyGardenFragment : Fragment() {
     private lateinit var db: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
     private var _binding: FragmentMyGardenBinding? = null
-    private lateinit var gardenUserUid : String
+    private var isMyGarden = true
+    private lateinit var gardenUserUid: String
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
@@ -46,6 +47,7 @@ class MyGardenFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         gardenUserUid = arguments?.getString("gardenUserUid")!!
+        isMyGarden = arguments?.getBoolean("isMyGarden")!!
         _binding = FragmentMyGardenBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -67,6 +69,16 @@ class MyGardenFragment : Fragment() {
         refreshGarden()
         // Retrieve and display posts
         refreshPosts()
+        //Change title of posts
+        if (isMyGarden) {
+            binding.tvPostsPhotos.text = resources.getString(R.string.my_posts_and_photos)
+        } else {
+            db.collection("users").document(gardenUserUid).get()
+                .addOnSuccessListener { document ->
+                    val name = document["name"] as String
+                    binding.tvPostsPhotos.text = getString(R.string.user_posts_and_photos, name)
+                }
+        }
 
         // Speed dial
         binding.speedDial.addActionItem(

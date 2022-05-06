@@ -9,8 +9,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import java.util.*
-
+import java.util.Calendar
+import java.util.Date
 
 class PostsAdapter(private val postsList: List<PostsViewModel>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -37,6 +37,7 @@ class PostsAdapter(private val postsList: List<PostsViewModel>) :
                 tvUser.setOnClickListener {
                     val bundle = Bundle()
                     bundle.putString("gardenUserUid", recyclerViewModel.postUserUid)
+                    bundle.putBoolean("isMyGarden", false)
                     val gardenFragment = MyGardenFragment()
                     gardenFragment.arguments = bundle
                     val activity = itemView.context as AppCompatActivity
@@ -65,6 +66,7 @@ class PostsAdapter(private val postsList: List<PostsViewModel>) :
                 tvUser.setOnClickListener {
                     val bundle = Bundle()
                     bundle.putString("gardenUserUid", recyclerViewModel.postUserUid)
+                    bundle.putBoolean("isMyGarden", false)
                     val gardenFragment = MyGardenFragment()
                     gardenFragment.arguments = bundle
                     val activity = itemView.context as AppCompatActivity
