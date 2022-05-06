@@ -24,6 +24,10 @@ class FeedFragment : Fragment() {
     private lateinit var storage: FirebaseStorage
     private var _binding: FragmentFeedBinding? = null
 
+    // This value is true if is the explore fragment (3rd item in the menu) or false if it is the
+    // friends fragment (2nd item in the menu)
+    private var isExploreFragment = true
+
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
@@ -32,6 +36,7 @@ class FeedFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        isExploreFragment = arguments?.getBoolean("isExploreFragment")!!
         _binding = FragmentFeedBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -63,41 +68,99 @@ class FeedFragment : Fragment() {
         val arrayPosts = ArrayList<PostsViewModel>()
         val adapter = PostsAdapter(arrayPosts)
         binding.rvPosts.adapter = adapter
-        db.collection("posts")
-            .orderBy("timestamp", Query.Direction.DESCENDING).limit(10)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    Toast.makeText(requireContext(), "No posts found", Toast.LENGTH_SHORT).show()
-                } else {
-                    val userUids = mutableSetOf<String>()
-                    // Reduce all the UIDs with get rid of non repeating elements
-                    documents.forEach { userUids.add(it.data["user"] as String) }
-                    val mapUidNameSurname = mutableMapOf<String, String>()
-                    db.collection("users").whereIn("uid", userUids.toList()).get()
-                        .addOnSuccessListener { usersData ->
-                            usersData.forEach { userData ->
-                                val name = userData.data["name"] as String
-                                val surname = userData.data["surname"] as String
-                                mapUidNameSurname[userData.data["uid"] as String] = "$name $surname"
+        if (isExploreFragment) {
+            db.collection("posts")
+                .orderBy("timestamp", Query.Direction.DESCENDING).limit(10)
+                .get()
+                .addOnSuccessListener { documents ->
+                    if (documents.isEmpty) {
+                        Toast.makeText(requireContext(), "No posts found", Toast.LENGTH_SHORT)
+                            .show()
+                    } else {
+                        val userUids = mutableSetOf<String>()
+                        // Reduce all the UIDs with get rid of non repeating elements
+                        documents.forEach { userUids.add(it.data["user"] as String) }
+                        val mapUidNameSurname = mutableMapOf<String, String>()
+                        db.collection("users").whereIn("uid", userUids.toList()).get()
+                            .addOnSuccessListener { usersData ->
+                                usersData.forEach { userData ->
+                                    val name = userData.data["name"] as String
+                                    val surname = userData.data["surname"] as String
+                                    mapUidNameSurname[userData.data["uid"] as String] =
+                                        "$name $surname"
+                                }
+                                documents.forEach { postData ->
+                                    val postUserUid = postData["user"] as String
+                                    // Doesn't show my posts
+                                    if (postUserUid != auth.currentUser!!.uid) {
+                                        arrayPosts.add(
+                                            PostsViewModel(
+                                                if (postData["type"].toString() == "post")
+                                                    PostsAdapter.TEXT
+                                                else PostsAdapter.PHOTO,
+                                                postData["content"] as String,
+                                                (postData["timestamp"] as Timestamp).toDate(),
+                                                mapUidNameSurname[postUserUid],
+                                                postUserUid
+                                            )
+                                        )
+                                    }
+                                }
+                                adapter.notifyItemRangeChanged(0, arrayPosts.size)
                             }
-                            documents.forEach { postData ->
-                                val postUserUid = postData["user"] as String
-                                arrayPosts.add(
-                                    PostsViewModel(
-                                        if (postData["type"].toString() == "post")
-                                            PostsAdapter.TEXT
-                                        else PostsAdapter.PHOTO,
-                                        postData["content"] as String,
-                                        (postData["timestamp"] as Timestamp).toDate(),
-                                        mapUidNameSurname[postUserUid],
-                                        postUserUid
-                                    )
+                    }
+                }
+        } else {
+            db.collection("users").document(auth.currentUser!!.uid).get()
+                .addOnSuccessListener { document ->
+                    val myFriendsUid = document["myFriends"] as List<String>
+                    db.collection("posts").whereIn("user", myFriendsUid)
+                        .orderBy("timestamp", Query.Direction.DESCENDING).limit(10)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            if (documents.isEmpty) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "No posts found",
+                                    Toast.LENGTH_SHORT
                                 )
+                                    .show()
+                            } else {
+                                val userUids = mutableSetOf<String>()
+                                // Reduce all the UIDs with get rid of non repeating elements
+                                documents.forEach { userUids.add(it.data["user"] as String) }
+                                val mapUidNameSurname = mutableMapOf<String, String>()
+                                db.collection("users").whereIn("uid", userUids.toList()).get()
+                                    .addOnSuccessListener { usersData ->
+                                        usersData.forEach { userData ->
+                                            val name = userData.data["name"] as String
+                                            val surname = userData.data["surname"] as String
+                                            mapUidNameSurname[userData.data["uid"] as String] =
+                                                "$name $surname"
+                                        }
+                                        documents.forEach { postData ->
+                                            val postUserUid = postData["user"] as String
+                                            // Doesn't show my posts
+                                            if (postUserUid != auth.currentUser!!.uid) {
+                                                arrayPosts.add(
+                                                    PostsViewModel(
+                                                        if (postData["type"].toString() == "post")
+                                                            PostsAdapter.TEXT
+                                                        else PostsAdapter.PHOTO,
+                                                        postData["content"] as String,
+                                                        (postData["timestamp"] as Timestamp).toDate(),
+                                                        mapUidNameSurname[postUserUid],
+                                                        postUserUid
+                                                    )
+                                                )
+                                            }
+                                        }
+                                        adapter.notifyItemRangeChanged(0, arrayPosts.size)
+                                    }
                             }
-                            adapter.notifyItemRangeChanged(0, arrayPosts.size)
                         }
                 }
-            }
+
+        }
     }
 }

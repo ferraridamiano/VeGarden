@@ -19,20 +19,29 @@ class MainActivity : AppCompatActivity() {
         val auth = Firebase.auth
 
         val myGardenFragment = GardenFragment()
-        val exploreFragment = FeedFragment()
-        val settingsFragment = SettingsFragment()
+        val bundleMyGarden = Bundle()
+        bundleMyGarden.putString("gardenUserUid", auth.currentUser!!.uid)
+        bundleMyGarden.putBoolean("isMyGarden", true)
+        myGardenFragment.arguments = bundleMyGarden
 
-        val bundle = Bundle()
-        bundle.putString("gardenUserUid", auth.currentUser!!.uid)
-        bundle.putBoolean("isMyGarden", true)
-        myGardenFragment.arguments = bundle
+        val friendsFragment = FeedFragment()
+        val friendsExplore = Bundle()
+        friendsExplore.putBoolean("isExploreFragment", false)
+        friendsFragment.arguments = friendsExplore
+
+        val exploreFragment = FeedFragment()
+        val bundleExplore = Bundle()
+        bundleExplore.putBoolean("isExploreFragment", true)
+        exploreFragment.arguments = bundleExplore
+
+        val settingsFragment = SettingsFragment()
 
         setCurrentFragment(myGardenFragment)
 
         binding.bottomNavigationBar.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.menuMyGarden -> setCurrentFragment(myGardenFragment)
-                R.id.menuMyFriends -> setCurrentFragment(exploreFragment)
+                R.id.menuMyFriends -> setCurrentFragment(friendsFragment)
                 R.id.menuExplore -> setCurrentFragment(exploreFragment)
                 R.id.menuSettings -> setCurrentFragment(settingsFragment)
             }
