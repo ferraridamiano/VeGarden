@@ -38,7 +38,7 @@ class PostsAdapter(private val postsList: List<PostsViewModel>) :
                     val bundle = Bundle()
                     bundle.putString("gardenUserUid", recyclerViewModel.postUserUid)
                     bundle.putBoolean("isMyGarden", false)
-                    val gardenFragment = MyGardenFragment()
+                    val gardenFragment = GardenFragment()
                     gardenFragment.arguments = bundle
                     val activity = itemView.context as AppCompatActivity
                     activity.supportFragmentManager.beginTransaction()
@@ -67,7 +67,7 @@ class PostsAdapter(private val postsList: List<PostsViewModel>) :
                     val bundle = Bundle()
                     bundle.putString("gardenUserUid", recyclerViewModel.postUserUid)
                     bundle.putBoolean("isMyGarden", false)
-                    val gardenFragment = MyGardenFragment()
+                    val gardenFragment = GardenFragment()
                     gardenFragment.arguments = bundle
                     val activity = itemView.context as AppCompatActivity
                     activity.supportFragmentManager.beginTransaction()

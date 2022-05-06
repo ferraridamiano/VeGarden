@@ -18,8 +18,8 @@ class MainActivity : AppCompatActivity() {
 
         val auth = Firebase.auth
 
-        val myGardenFragment = MyGardenFragment()
-        val exploreFragment = ExploreFragment()
+        val myGardenFragment = GardenFragment()
+        val exploreFragment = FeedFragment()
         val settingsFragment = SettingsFragment()
 
         val bundle = Bundle()
@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationBar.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.menuMyGarden -> setCurrentFragment(myGardenFragment)
+                R.id.menuMyFriends -> setCurrentFragment(exploreFragment)
                 R.id.menuExplore -> setCurrentFragment(exploreFragment)
                 R.id.menuSettings -> setCurrentFragment(settingsFragment)
             }

@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.vegarden.databinding.FragmentExploreBinding
+import com.example.vegarden.databinding.FragmentFeedBinding
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -18,11 +18,11 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 
-class ExploreFragment : Fragment() {
+class FeedFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
-    private var _binding: FragmentExploreBinding? = null
+    private var _binding: FragmentFeedBinding? = null
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
@@ -32,7 +32,7 @@ class ExploreFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentExploreBinding.inflate(inflater, container, false)
+        _binding = FragmentFeedBinding.inflate(inflater, container, false)
         return binding.root
     }
 

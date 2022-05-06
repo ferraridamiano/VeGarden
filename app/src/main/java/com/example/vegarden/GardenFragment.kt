@@ -15,7 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.vegarden.databinding.FragmentMyGardenBinding
+import com.example.vegarden.databinding.FragmentGardenBinding
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -30,11 +30,11 @@ import java.util.Calendar
 import java.util.Date
 import kotlin.collections.ArrayList
 
-class MyGardenFragment : Fragment() {
+class GardenFragment : Fragment() {
 
     private lateinit var db: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
-    private var _binding: FragmentMyGardenBinding? = null
+    private var _binding: FragmentGardenBinding? = null
     private var isMyGarden = true
     private lateinit var gardenUserUid: String
 
@@ -48,7 +48,7 @@ class MyGardenFragment : Fragment() {
     ): View {
         gardenUserUid = arguments?.getString("gardenUserUid")!!
         isMyGarden = arguments?.getBoolean("isMyGarden")!!
-        _binding = FragmentMyGardenBinding.inflate(inflater, container, false)
+        _binding = FragmentGardenBinding.inflate(inflater, container, false)
         return binding.root
     }
 

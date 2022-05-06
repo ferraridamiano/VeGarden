@@ -2,16 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menuMyGarden"
-        android:title="@string/my_vegarden"
-        android:icon="@drawable/ic_baseline_dashboard_24"/>
+        android:icon="@drawable/ic_baseline_dashboard_24"
+        android:title="@string/my_vegarden" />
+
+    <item
+        android:id="@+id/menuMyFriends"
+        android:icon="@drawable/ic_people"
+        android:title="@string/my_friends" />
 
     <item
         android:id="@+id/menuExplore"
-        android:title="@string/explore"
-        android:icon="@drawable/ic_outline_explore_24"/>
+        android:icon="@drawable/ic_outline_explore_24"
+        android:title="@string/explore" />
 
     <item
         android:id="@+id/menuSettings"
-        android:title="@string/settings"
-        android:icon="@drawable/ic_outline_settings_24"/>
+        android:icon="@drawable/ic_outline_settings_24"
+        android:title="@string/settings" />
 </menu>
