@@ -8,9 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.vegarden.PostsViewModel
 import com.example.vegarden.R
 import com.example.vegarden.fragments.GardenFragment
+import com.example.vegarden.models.PostsViewModel
 import com.squareup.picasso.Picasso
 import java.util.Calendar
 import java.util.Date

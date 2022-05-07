@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import com.example.vegarden.User
+import com.example.vegarden.models.User
 import com.example.vegarden.databinding.ActivitySignupBinding
 import com.example.vegarden.isValidEmail
 import com.example.vegarden.isValidPassword

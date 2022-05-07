@@ -45,6 +45,7 @@
         <entry key="app/src/main/res/layout/fragment_my_account.xml" value="0.24114583333333334" />
         <entry key="app/src/main/res/layout/fragment_my_garden.xml" value="0.3385416666666667" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.3536458333333333" />
+        <entry key="app/src/main/res/layout/my_friend_item.xml" value="0.5" />
         <entry key="app/src/main/res/layout/plot.xml" value="0.18020833333333333" />
         <entry key="app/src/main/res/layout/post.xml" value="0.3536458333333333" />
         <entry key="app/src/main/res/layout/post_photo.xml" value="0.2625" />

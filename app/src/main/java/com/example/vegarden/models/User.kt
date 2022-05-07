@@ -1,4 +1,4 @@
-package com.example.vegarden
+package com.example.vegarden.models
 
 data class User(
     val name: String? = null,

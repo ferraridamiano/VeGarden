@@ -1,4 +1,4 @@
-package com.example.vegarden
+package com.example.vegarden.models
 
 import java.io.Serializable
 import java.util.Date

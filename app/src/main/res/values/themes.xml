@@ -24,4 +24,10 @@
         <item name="cornerSize">100dp</item>
     </style>
 
+    <style name="roundedMyFriendPhoto" parent="">
+
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50dp</item>
+    </style>
+
 </resources>

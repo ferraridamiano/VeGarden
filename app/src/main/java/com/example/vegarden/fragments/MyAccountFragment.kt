@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.example.vegarden.R
-import com.example.vegarden.User
+import com.example.vegarden.models.User
 import com.example.vegarden.activities.MyFriendsActivity
 import com.example.vegarden.activities.SigninActivity
 import com.example.vegarden.databinding.FragmentMyAccountBinding

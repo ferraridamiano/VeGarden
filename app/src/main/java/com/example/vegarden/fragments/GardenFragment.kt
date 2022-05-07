@@ -20,6 +20,9 @@ import com.example.vegarden.activities.AddPostActivity
 import com.example.vegarden.activities.ChangeCropActivity
 import com.example.vegarden.adapters.PostsAdapter
 import com.example.vegarden.databinding.FragmentGardenBinding
+import com.example.vegarden.models.GardenPlot
+import com.example.vegarden.models.PostsViewModel
+import com.example.vegarden.models.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth

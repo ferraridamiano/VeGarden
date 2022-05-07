@@ -7,11 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.vegarden.PostsViewModel
 import com.example.vegarden.R
-import com.example.vegarden.User
 import com.example.vegarden.adapters.PostsAdapter
 import com.example.vegarden.databinding.FragmentFeedBinding
+import com.example.vegarden.models.PostsViewModel
+import com.example.vegarden.models.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
