@@ -85,11 +85,7 @@ class SignupActivity : AppCompatActivity() {
                     ).show()
                     val db = Firebase.firestore
                     // Create a new user with a first and last name
-                    val newUser = hashMapOf(
-                        "name" to name,
-                        "surname" to surname,
-                        "uid" to user!!.uid
-                    )
+                    val newUser = User(name, surname, email, user!!.uid)
 
                     db.collection("users").document(user.uid).set(newUser)
                         .addOnSuccessListener { _ ->
@@ -99,7 +95,11 @@ class SignupActivity : AppCompatActivity() {
                         }
                         .addOnFailureListener { e ->
                             Log.w(TAG, "Error adding document", e)
-                            Toast.makeText(this, "Connection error. Try again later...", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this,
+                                "Connection error. Try again later...",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                 } else {
                     // If sign in fails, display a message to the user.

@@ -16,7 +16,10 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vegarden.databinding.FragmentGardenBinding
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -27,13 +30,13 @@ import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
 import java.io.Serializable
 import java.util.Calendar
-import java.util.Date
 import kotlin.collections.ArrayList
 
 class GardenFragment : Fragment() {
 
     private lateinit var db: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
+    private lateinit var auth: FirebaseAuth
     private var _binding: FragmentGardenBinding? = null
     private var isMyGarden = true
     private lateinit var gardenUserUid: String
@@ -59,6 +62,7 @@ class GardenFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        auth = Firebase.auth
         db = Firebase.firestore
         storage = Firebase.storage
     }
@@ -72,29 +76,68 @@ class GardenFragment : Fragment() {
         //Change title of posts
         if (isMyGarden) {
             binding.tvPostsPhotos.text = resources.getString(R.string.my_posts_and_photos)
+            // Speed dial
+            binding.speedDial.addActionItem(
+                SpeedDialActionItem.Builder(R.id.addPhoto, R.drawable.ic_baseline_add_a_photo_24)
+                    .setLabel(getString(R.string.add_a_photo))
+                    .setFabBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.secondary,
+                            null
+                        )
+                    )
+                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, null))
+                    .create()
+            )
+            binding.speedDial.addActionItem(
+                SpeedDialActionItem.Builder(R.id.addPost, R.drawable.ic_baseline_post_add_24)
+                    .setLabel(getString(R.string.add_a_post))
+                    .setFabBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.secondary,
+                            null
+                        )
+                    )
+                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, null))
+                    .create()
+            )
         } else {
             db.collection("users").document(gardenUserUid).get()
                 .addOnSuccessListener { document ->
                     val name = document["name"] as String
                     binding.tvPostsPhotos.text = getString(R.string.user_posts_and_photos, name)
                 }
-        }
+            //Speed dial
+            // TODO: Change Icon
+            // TODO: different action if already friends
+            //binding.speedDial.background =
+            //    ResourcesCompat.getDrawable(resources, R.drawable.ic_person_add, null)
 
-        // Speed dial
-        binding.speedDial.addActionItem(
-            SpeedDialActionItem.Builder(R.id.addPhoto, R.drawable.ic_baseline_add_a_photo_24)
-                .setLabel(getString(R.string.add_a_photo))
-                .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.secondary, null))
-                .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, null))
-                .create()
-        )
-        binding.speedDial.addActionItem(
-            SpeedDialActionItem.Builder(R.id.addPost, R.drawable.ic_baseline_post_add_24)
-                .setLabel(getString(R.string.add_a_post))
-                .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.secondary, null))
-                .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, null))
-                .create()
-        )
+            binding.speedDial.setOnChangeListener(object : SpeedDialView.OnChangeListener {
+                override fun onMainActionSelected(): Boolean {
+                    Log.d("GardenFragment", "Speed dial toggle state changed.")
+                    val firestoreRef = db.collection("users").document(auth.currentUser!!.uid)
+                    firestoreRef.get().addOnSuccessListener { document ->
+                        val currentUser = document.toObject(User::class.java)!!
+                        //Add gardenUser to the list of friends
+                        currentUser.myFriends = currentUser.myFriends.plus(gardenUserUid)
+                        firestoreRef.set(currentUser).addOnSuccessListener {
+                            Snackbar.make(
+                                requireActivity().findViewById(R.id.flFragment),
+                                "Friend added", Snackbar.LENGTH_SHORT
+                            )
+                                .setAnchorView(requireActivity().findViewById(R.id.speedDial))
+                                .setAction("") {}.show()
+                        }
+                    }
+                    return false
+                }
+
+                override fun onToggleChanged(isOpen: Boolean) {}
+            })
+        }
 
         binding.speedDial.setOnActionSelectedListener(SpeedDialView.OnActionSelectedListener { actionItem ->
             when (actionItem.id) {
@@ -137,15 +180,19 @@ class GardenFragment : Fragment() {
                         )
                         db.collection("posts").add(newPost)
                             .addOnSuccessListener {
-                                Toast.makeText(requireContext(), "Post added", Toast.LENGTH_SHORT)
-                                    .show()
+                                Snackbar.make(
+                                    requireActivity().findViewById(R.id.flFragment),
+                                    "Post added", Snackbar.LENGTH_SHORT
+                                ).setAnchorView(requireActivity().findViewById(R.id.speedDial))
+                                    .setAction("") {}.show()
                                 refreshPosts()
                             }.addOnFailureListener {
-                                Toast.makeText(
-                                    requireContext(),
+                                Snackbar.make(
+                                    requireActivity().findViewById(R.id.flFragment),
                                     "Error connecting to internet",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                    Snackbar.LENGTH_SHORT
+                                ).setAnchorView(requireActivity().findViewById(R.id.speedDial))
+                                    .setAction("") {}.show()
                             }
                     } else {
                         // TODO Handle failures
@@ -237,7 +284,12 @@ class GardenFragment : Fragment() {
             .get()
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
-                    Toast.makeText(requireContext(), "No posts found", Toast.LENGTH_SHORT).show()
+                    Snackbar.make(
+                        requireActivity().findViewById(R.id.flFragment),
+                        "No posts found",
+                        Snackbar.LENGTH_SHORT
+                    ).setAnchorView(requireActivity().findViewById(R.id.speedDial))
+                        .setAction("") {}.show()
                 } else {
                     documents.forEach { document ->
                         arrayPosts.add(
