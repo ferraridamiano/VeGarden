@@ -6,14 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.vegarden.databinding.FragmentSettingsBinding
+import com.example.vegarden.databinding.FragmentMyAccountBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class SettingsFragment:Fragment(R.layout.fragment_settings) {
+class MyAccountFragment:Fragment(R.layout.fragment_my_account) {
     private lateinit var auth: FirebaseAuth
-    private var _binding: FragmentSettingsBinding? = null
+    private lateinit var db : FirebaseFirestore
+    private var _binding: FragmentMyAccountBinding? = null
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
@@ -23,7 +26,7 @@ class SettingsFragment:Fragment(R.layout.fragment_settings) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        _binding = FragmentMyAccountBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -35,11 +38,20 @@ class SettingsFragment:Fragment(R.layout.fragment_settings) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
+        db = Firebase.firestore
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.btnLogout.setOnClickListener {
+
+        db.collection("users").document(auth.currentUser!!.uid).get()
+            .addOnSuccessListener { document ->
+                val user = document.toObject(User::class.java)
+                binding.tvNameSurname.text = "${user?.name} ${user?.surname}"
+                binding.tvEmail.text = user?.email
+        }
+
+        binding.llLogout.setOnClickListener {
             auth.signOut()
             startActivity(Intent(requireContext(), SigninActivity::class.java))
             activity?.finish()

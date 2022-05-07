@@ -16,7 +16,7 @@
         android:title="@string/explore" />
 
     <item
-        android:id="@+id/menuSettings"
-        android:icon="@drawable/ic_outline_settings_24"
-        android:title="@string/settings" />
+        android:id="@+id/menuMyAccount"
+        android:icon="@drawable/ic_account_circle"
+        android:title="@string/my_account" />
 </menu>

@@ -56,6 +56,8 @@
     <string name="leeks">Leeks</string>
     <string name="radishes">Radishes</string>
     <string name="other">Other</string>
+    <string name="logout">Logout</string>
+    <string name="my_account">My Account</string>
     <string-array name="crops_list">
         <item>@string/uncultivated</item>
         <item>@string/broccoli</item>

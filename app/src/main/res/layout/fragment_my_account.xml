@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/ivPhoto"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_account_circle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvNameSurname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivPhoto"
+        tools:text="Name Surname" />
+
+    <TextView
+        android:id="@+id/tvEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNameSurname"
+        tools:text="mail@sld.tld" />
+
+    <View
+        android:id="@+id/separator1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="48dp"
+        android:background="@color/black"
+        app:layout_constraintTop_toBottomOf="@+id/tvEmail"
+        tools:layout_editor_absoluteX="12dp" />
+
+    <LinearLayout
+        android:id="@+id/llMyFriends"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingVertical="12dp"
+        app:layout_constraintTop_toBottomOf="@+id/separator1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="12dp"
+            android:gravity="center"
+            android:text="@string/my_friends"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:drawableStartCompat="@drawable/ic_people" />
+    </LinearLayout>
+
+
+    <View
+        android:id="@+id/separator2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="24dp"
+        android:background="@color/black"
+        app:layout_constraintTop_toBottomOf="@+id/llMyFriends"
+        tools:layout_editor_absoluteX="12dp" />
+
+    <LinearLayout
+        android:id="@+id/llLogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="horizontal"
+        android:paddingVertical="12dp"
+        app:layout_constraintTop_toBottomOf="@+id/separator2">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="12dp"
+            android:gravity="center"
+            android:text="@string/logout"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:drawableStartCompat="@drawable/ic_logout" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="24dp"
+        android:background="@color/black"
+        app:layout_constraintTop_toBottomOf="@+id/llLogout"
+        tools:layout_editor_absoluteX="12dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

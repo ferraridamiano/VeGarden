@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         bundleExplore.putBoolean("isExploreFragment", true)
         exploreFragment.arguments = bundleExplore
 
-        val settingsFragment = SettingsFragment()
+        val myAccountFragment = MyAccountFragment()
 
         setCurrentFragment(myGardenFragment)
 
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.menuMyGarden -> setCurrentFragment(myGardenFragment)
                 R.id.menuMyFriends -> setCurrentFragment(friendsFragment)
                 R.id.menuExplore -> setCurrentFragment(exploreFragment)
-                R.id.menuSettings -> setCurrentFragment(settingsFragment)
+                R.id.menuMyAccount -> setCurrentFragment(myAccountFragment)
             }
             true
         }
