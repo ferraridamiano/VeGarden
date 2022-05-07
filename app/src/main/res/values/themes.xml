@@ -19,4 +19,9 @@
         <item name="cornerSize">@dimen/radiusPost</item>
     </style>
 
+    <style name="roundedAccountPhoto" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">100dp</item>
+    </style>
+
 </resources>

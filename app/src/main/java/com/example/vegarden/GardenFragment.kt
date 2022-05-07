@@ -142,7 +142,7 @@ class GardenFragment : Fragment() {
         binding.speedDial.setOnActionSelectedListener(SpeedDialView.OnActionSelectedListener { actionItem ->
             when (actionItem.id) {
                 R.id.addPhoto -> {
-                    fileChooserContract.launch("image/*")
+                    fileChooser.launch("image/*")
 
                     binding.speedDial.close()
                     return@OnActionSelectedListener true // close with animation
@@ -157,7 +157,7 @@ class GardenFragment : Fragment() {
         })
     }
 
-    private val fileChooserContract =
+    private val fileChooser =
         registerForActivityResult(ActivityResultContracts.GetContent()) { imageUri ->
             if (imageUri != null) {
                 val ref =
