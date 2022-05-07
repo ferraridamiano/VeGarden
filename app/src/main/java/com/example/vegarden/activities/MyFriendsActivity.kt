@@ -2,11 +2,13 @@ package com.example.vegarden.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vegarden.R
 import com.example.vegarden.adapters.MyFriendsAdapter
 import com.example.vegarden.adapters.PostsAdapter
 import com.example.vegarden.databinding.ActivityMyFriendsBinding
+import com.example.vegarden.fragments.GardenFragment
 import com.example.vegarden.models.MyFriendsViewModel
 import com.example.vegarden.models.PostsViewModel
 import com.example.vegarden.models.User
@@ -43,6 +45,18 @@ class MyFriendsActivity : AppCompatActivity() {
         val arrayFriends = ArrayList<MyFriendsViewModel>()
         val adapter = MyFriendsAdapter(arrayFriends)
         binding.rvMyFriends.adapter = adapter
+
+        adapter.onItemClick = { friend ->
+            Log.d("Damiano", friend.uid)
+            /*val bundle = Bundle()
+            bundle.putString("gardenUserUid", friend.uid)
+            bundle.putBoolean("isMyGarden", false)
+            val gardenFragment = GardenFragment()
+            gardenFragment.arguments = bundle
+            getActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.flFragment, gardenFragment)
+                .addToBackStack(null).commit()*/
+        }
 
         db.collection("users").document(auth.currentUser!!.uid).get()
             .addOnSuccessListener { document ->

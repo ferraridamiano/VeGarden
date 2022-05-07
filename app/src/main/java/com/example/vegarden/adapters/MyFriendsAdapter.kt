@@ -13,9 +13,17 @@ import com.squareup.picasso.Picasso
 class MyFriendsAdapter(private val friendsList: List<MyFriendsViewModel>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    var onItemClick: ((MyFriendsViewModel) -> Unit)? = null
+
     private inner class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         var ivProfilePhoto: ImageView = itemView.findViewById(R.id.ivProfilePhoto)
         var tvNameSurname: TextView = itemView.findViewById(R.id.tvNameSurname)
+
+        init {
+            itemView.setOnClickListener {
+                onItemClick?.invoke(friendsList[adapterPosition])
+            }
+        }
 
         fun bind(position: Int){
             val recyclerViewModel = friendsList[position]
