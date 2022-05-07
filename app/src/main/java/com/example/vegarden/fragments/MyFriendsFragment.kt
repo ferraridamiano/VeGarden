@@ -1,38 +1,55 @@
-package com.example.vegarden.activities
+package com.example.vegarden.fragments
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vegarden.R
 import com.example.vegarden.adapters.MyFriendsAdapter
-import com.example.vegarden.adapters.PostsAdapter
-import com.example.vegarden.databinding.ActivityMyFriendsBinding
-import com.example.vegarden.fragments.GardenFragment
+import com.example.vegarden.databinding.FragmentMyFriendsBinding
 import com.example.vegarden.models.MyFriendsViewModel
-import com.example.vegarden.models.PostsViewModel
 import com.example.vegarden.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
 
-class MyFriendsActivity : AppCompatActivity() {
+class MyFriendsFragment : Fragment() {
+    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
+    private var _binding: FragmentMyFriendsBinding? = null
 
-    lateinit var binding: ActivityMyFriendsBinding
-    lateinit var auth: FirebaseAuth
-    lateinit var db: FirebaseFirestore
+    // This property is only valid between onCreateView and onDestroyView.
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentMyFriendsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityMyFriendsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         auth = Firebase.auth
         db = Firebase.firestore
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        //TODO
+
     }
 
     override fun onResume() {
@@ -41,21 +58,20 @@ class MyFriendsActivity : AppCompatActivity() {
     }
 
     private fun refreshFriends() {
-        binding.rvMyFriends.layoutManager = LinearLayoutManager(this)
+        binding.rvMyFriends.layoutManager = LinearLayoutManager(requireContext())
         val arrayFriends = ArrayList<MyFriendsViewModel>()
         val adapter = MyFriendsAdapter(arrayFriends)
         binding.rvMyFriends.adapter = adapter
 
         adapter.onItemClick = { friend ->
-            Log.d("Damiano", friend.uid)
-            /*val bundle = Bundle()
+            val bundle = Bundle()
             bundle.putString("gardenUserUid", friend.uid)
             bundle.putBoolean("isMyGarden", false)
             val gardenFragment = GardenFragment()
             gardenFragment.arguments = bundle
-            getActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.flFragment, gardenFragment)
-                .addToBackStack(null).commit()*/
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.flFragment, gardenFragment)
+                ?.addToBackStack(null)?.commit()
         }
 
         db.collection("users").document(auth.currentUser!!.uid).get()
@@ -76,7 +92,6 @@ class MyFriendsActivity : AppCompatActivity() {
                         adapter.notifyItemRangeChanged(0, documents.size())
                     }
             }
-
-
     }
+
 }

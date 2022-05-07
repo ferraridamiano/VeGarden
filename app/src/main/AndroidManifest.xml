@@ -12,9 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VeGarden">
         <activity
-            android:name=".activities.MyFriendsActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.ChangeCropActivity"
             android:exported="false" />
         <activity

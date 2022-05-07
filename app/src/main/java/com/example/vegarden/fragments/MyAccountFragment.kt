@@ -9,7 +9,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.example.vegarden.R
 import com.example.vegarden.models.User
-import com.example.vegarden.activities.MyFriendsActivity
 import com.example.vegarden.activities.SigninActivity
 import com.example.vegarden.databinding.FragmentMyAccountBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -57,7 +56,7 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
         db.collection("users").document(auth.currentUser!!.uid).get()
             .addOnSuccessListener { document ->
                 val user = document.toObject(User::class.java)!!
-                binding.tvNameSurname.text = "${user?.name} ${user?.surname}"
+                binding.tvNameSurname.text = "${user.name} ${user.surname}"
                 binding.tvEmail.text = user.email
 
                 refreshProfilePhoto(user)
@@ -69,7 +68,9 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
             }
 
         binding.llMyFriends.setOnClickListener {
-            startActivity(Intent(requireContext(), MyFriendsActivity::class.java))
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.flFragment, MyFriendsFragment())
+                ?.addToBackStack(null)?.commit()
         }
 
         binding.llLogout.setOnClickListener {
