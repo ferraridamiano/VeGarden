@@ -53,19 +53,11 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        db.collection("users").document(auth.currentUser!!.uid).get()
-            .addOnSuccessListener { document ->
-                val user = document.toObject(User::class.java)!!
-                binding.tvNameSurname.text = "${user.name} ${user.surname}"
-                binding.tvEmail.text = user.email
+        refreshData()
 
-                refreshProfilePhoto(user)
-
-                binding.ivPhoto.setOnClickListener {
-                    fileChooser.launch("image/*")
-                    refreshProfilePhoto(user)
-                }
-            }
+        binding.ivPhoto.setOnClickListener {
+            fileChooser.launch("image/*")
+        }
 
         binding.llMyFriends.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()
@@ -81,11 +73,17 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
 
     }
 
-    private fun refreshProfilePhoto(user: User) {
-        // If there is a saved photo load it to the imageview, otherwise leave the placeholder
-        if (!user.profilePhoto.isNullOrEmpty()) {
-            Picasso.get().load(user.profilePhoto).into(binding.ivPhoto)
-        }
+    private fun refreshData() {
+        db.collection("users").document(auth.currentUser!!.uid).get()
+            .addOnSuccessListener { document ->
+                val user = document.toObject(User::class.java)!!
+                binding.tvNameSurname.text = "${user.name} ${user.surname}"
+                binding.tvEmail.text = user.email
+
+                if (!user.profilePhoto.isNullOrEmpty()) {
+                    Picasso.get().load(user.profilePhoto).into(binding.ivPhoto)
+                }
+            }
     }
 
     private val fileChooser =
@@ -108,6 +106,7 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
                             val user = document.toObject(User::class.java)!!
                             user.profilePhoto = downloadUri.toString()
                             firestoreRef.set(user)
+                            refreshData()
                         }
                     }
                 }
