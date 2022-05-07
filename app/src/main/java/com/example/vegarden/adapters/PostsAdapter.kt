@@ -1,4 +1,4 @@
-package com.example.vegarden
+package com.example.vegarden.adapters
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.vegarden.PostsViewModel
+import com.example.vegarden.R
+import com.example.vegarden.fragments.GardenFragment
 import com.squareup.picasso.Picasso
 import java.util.Calendar
 import java.util.Date

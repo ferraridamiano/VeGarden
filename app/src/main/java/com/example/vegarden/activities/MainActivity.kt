@@ -1,9 +1,13 @@
-package com.example.vegarden
+package com.example.vegarden.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import com.example.vegarden.R
 import com.example.vegarden.databinding.ActivityMainBinding
+import com.example.vegarden.fragments.FeedFragment
+import com.example.vegarden.fragments.GardenFragment
+import com.example.vegarden.fragments.MyAccountFragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 

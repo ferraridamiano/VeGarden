@@ -1,4 +1,4 @@
-package com.example.vegarden
+package com.example.vegarden.activities
 
 import android.content.ContentValues
 import android.content.Intent
@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.example.vegarden.GardenPlot
 import com.example.vegarden.databinding.ActivityGardenSetupBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth

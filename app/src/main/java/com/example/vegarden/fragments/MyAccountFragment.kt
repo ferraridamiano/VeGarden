@@ -1,4 +1,4 @@
-package com.example.vegarden
+package com.example.vegarden.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,8 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.example.vegarden.R
+import com.example.vegarden.User
+import com.example.vegarden.activities.MyFriendsActivity
+import com.example.vegarden.activities.SigninActivity
 import com.example.vegarden.databinding.FragmentMyAccountBinding
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,7 +20,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.squareup.picasso.Picasso
-import java.util.*
 
 class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
     private lateinit var auth: FirebaseAuth
@@ -65,6 +67,10 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
                     refreshProfilePhoto(user)
                 }
             }
+
+        binding.llMyFriends.setOnClickListener {
+            startActivity(Intent(requireContext(), MyFriendsActivity::class.java))
+        }
 
         binding.llLogout.setOnClickListener {
             auth.signOut()

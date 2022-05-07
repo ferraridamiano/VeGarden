@@ -1,4 +1,4 @@
-package com.example.vegarden
+package com.example.vegarden.activities
 
 import android.app.DatePickerDialog
 import android.app.Dialog
@@ -8,7 +8,10 @@ import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.vegarden.GardenPlot
+import com.example.vegarden.R
 import com.example.vegarden.databinding.ActivityChangeCropBinding
+import com.example.vegarden.getPlotDrawable
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth

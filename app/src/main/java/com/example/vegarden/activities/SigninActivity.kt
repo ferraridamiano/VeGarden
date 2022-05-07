@@ -1,4 +1,4 @@
-package com.example.vegarden
+package com.example.vegarden.activities
 
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.example.vegarden.databinding.ActivitySigninBinding
+import com.example.vegarden.isValidEmail
+import com.example.vegarden.isValidPassword
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase

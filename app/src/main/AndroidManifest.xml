@@ -12,16 +12,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VeGarden">
         <activity
-            android:name=".ChangeCropActivity"
+            android:name=".activities.MyFriendsActivity"
             android:exported="false" />
         <activity
-            android:name=".AddPostActivity"
+            android:name=".activities.ChangeCropActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.AddPostActivity"
             android:exported="false" />
         <activity
-            android:name=".SigninActivity"
+            android:name=".activities.MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SigninActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,10 +33,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SignupActivity"
+            android:name=".activities.SignupActivity"
             android:exported="false" />
         <activity
-            android:name=".GardenSetupActivity"
+            android:name=".activities.GardenSetupActivity"
             android:exported="false" />
     </application>
 

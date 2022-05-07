@@ -1,4 +1,4 @@
-package com.example.vegarden
+package com.example.vegarden.fragments
 
 import android.content.ContentValues
 import android.content.Intent
@@ -15,6 +15,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.vegarden.*
+import com.example.vegarden.activities.AddPostActivity
+import com.example.vegarden.activities.ChangeCropActivity
+import com.example.vegarden.adapters.PostsAdapter
 import com.example.vegarden.databinding.FragmentGardenBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
