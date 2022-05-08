@@ -76,6 +76,9 @@ class GardenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Appbar
+        activity?.title =
+            resources.getString(if (isMyGarden) R.string.my_vegarden else R.string.app_name)
         // Get garden and refresh thew fragment
         refreshGarden()
         // Retrieve and display posts
@@ -86,7 +89,7 @@ class GardenFragment : Fragment() {
             // Speed dial
             binding.speedDial.addActionItem(
                 SpeedDialActionItem.Builder(R.id.addPhoto, R.drawable.ic_add_a_photo)
-                    .setLabel(getString(R.string.add_a_photo))
+                    .setLabel(getString(R.string.post_a_photo))
                     .setFabBackgroundColor(
                         ResourcesCompat.getColor(
                             resources,
@@ -99,7 +102,7 @@ class GardenFragment : Fragment() {
             )
             binding.speedDial.addActionItem(
                 SpeedDialActionItem.Builder(R.id.addPost, R.drawable.ic_post_add)
-                    .setLabel(getString(R.string.add_a_post))
+                    .setLabel(getString(R.string.write_a_post))
                     .setFabBackgroundColor(
                         ResourcesCompat.getColor(
                             resources,
@@ -115,6 +118,7 @@ class GardenFragment : Fragment() {
                 .addOnSuccessListener { document ->
                     val name = document["name"] as String
                     binding.tvPostsPhotos.text = getString(R.string.user_posts_and_photos, name)
+                    activity?.title = getString(R.string.user_vegarden, name)
                 }
             //Speed dial
             // TODO: Change Icon

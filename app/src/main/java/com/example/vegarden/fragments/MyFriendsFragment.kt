@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vegarden.R
 import com.example.vegarden.adapters.MyFriendsAdapter
@@ -16,6 +18,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+
+// WARNING: THIS IS NOT THE FRAGMENT FOR THE FEED OF THE FRIENDS' POSTS BUT JUST THE LIST OF THE
+//          FRIENDS IN "MY ACCOUNT"
 
 class MyFriendsFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
@@ -47,9 +52,8 @@ class MyFriendsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        //TODO
-
+        // Appbar
+        activity?.title = resources.getString(R.string.my_friends)
     }
 
     override fun onResume() {

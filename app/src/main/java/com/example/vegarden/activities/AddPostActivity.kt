@@ -24,6 +24,11 @@ class AddPostActivity : AppCompatActivity() {
         binding = ActivityAddPostBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //Appbar
+        title = "Write a post"
+        actionBar?.setDisplayHomeAsUpEnabled(true);
+
+        //Firebase init
         auth = Firebase.auth
         db = Firebase.firestore
 

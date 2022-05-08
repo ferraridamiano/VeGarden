@@ -18,8 +18,7 @@
     <string name="total_area">Total area:</string>
     <string name="next">Next</string>
     <string name="garden_size_question">What is the size of your vegetable garden?</string>
-    <string name="add_a_photo">Add a photo</string>
-    <string name="add_a_post">Add a post</string>
+    <string name="post_a_photo">Post a photo</string>
     <string name="says">says:</string>
     <string name="write_a_post">Write a post</string>
     <string name="my_vegarden">My VeGarden</string>
@@ -41,6 +40,11 @@
     <string name="my_notes">My notes</string>
     <string name="user_notes">%1$s\'s notes</string>
     <string name="my_friends">My Friends</string>
+    <string name="logout">Logout</string>
+    <string name="my_account">My Account</string>
+    <string name="my_friends_posts">My friends\' posts</string>
+    <string name="explore_other_vegardens">Explore other VeGardens</string>
+    <string name="user_vegarden">%1$s\'s VeGarden</string>
 
     <string name="uncultivated">Uncultivated</string>
     <string name="watermelon">Watermelons</string>
@@ -56,8 +60,6 @@
     <string name="leeks">Leeks</string>
     <string name="radishes">Radishes</string>
     <string name="other">Other</string>
-    <string name="logout">Logout</string>
-    <string name="my_account">My Account</string>
     <string-array name="crops_list">
         <item>@string/uncultivated</item>
         <item>@string/broccoli</item>
@@ -74,6 +76,4 @@
         <item>@string/watermelon</item>
         <item>@string/other</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

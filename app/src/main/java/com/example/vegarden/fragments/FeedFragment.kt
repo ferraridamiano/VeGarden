@@ -60,7 +60,10 @@ class FeedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        refreshPosts()
+        // Appbar
+        activity?.title = resources.getString(
+            if (isExploreFragment) R.string.explore_other_vegardens else R.string.my_friends_posts
+        )
     }
 
     override fun onResume() {

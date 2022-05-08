@@ -53,6 +53,9 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Appbar
+        activity?.title = resources.getString(R.string.my_account)
+
         refreshData()
 
         binding.ivPhoto.setOnClickListener {
