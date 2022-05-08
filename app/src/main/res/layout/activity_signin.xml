@@ -113,7 +113,7 @@
         android:backgroundTint="@color/primary"
         android:text="@string/sign_in"
         android:textColor="@color/white"
-        app:icon="@drawable/ic_baseline_login_24"
+        app:icon="@drawable/ic_login"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

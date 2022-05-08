@@ -2,21 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menuMyGarden"
-        android:icon="@drawable/ic_baseline_dashboard_24"
+        android:icon="@drawable/menu_ic_garden"
         android:title="@string/my_vegarden" />
 
     <item
         android:id="@+id/menuMyFriends"
-        android:icon="@drawable/ic_people"
+        android:icon="@drawable/menu_ic_friends"
         android:title="@string/my_friends" />
 
     <item
         android:id="@+id/menuExplore"
-        android:icon="@drawable/ic_outline_explore_24"
+        android:icon="@drawable/menu_ic_explore"
         android:title="@string/explore" />
 
     <item
         android:id="@+id/menuMyAccount"
-        android:icon="@drawable/ic_account_circle"
+        android:icon="@drawable/menu_ic_account"
         android:title="@string/my_account" />
 </menu>

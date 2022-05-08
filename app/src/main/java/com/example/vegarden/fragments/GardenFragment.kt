@@ -85,7 +85,7 @@ class GardenFragment : Fragment() {
             binding.tvPostsPhotos.text = resources.getString(R.string.my_posts_and_photos)
             // Speed dial
             binding.speedDial.addActionItem(
-                SpeedDialActionItem.Builder(R.id.addPhoto, R.drawable.ic_baseline_add_a_photo_24)
+                SpeedDialActionItem.Builder(R.id.addPhoto, R.drawable.ic_add_a_photo)
                     .setLabel(getString(R.string.add_a_photo))
                     .setFabBackgroundColor(
                         ResourcesCompat.getColor(
@@ -98,7 +98,7 @@ class GardenFragment : Fragment() {
                     .create()
             )
             binding.speedDial.addActionItem(
-                SpeedDialActionItem.Builder(R.id.addPost, R.drawable.ic_baseline_post_add_24)
+                SpeedDialActionItem.Builder(R.id.addPost, R.drawable.ic_post_add)
                     .setLabel(getString(R.string.add_a_post))
                     .setFabBackgroundColor(
                         ResourcesCompat.getColor(

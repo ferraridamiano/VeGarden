@@ -17,6 +17,7 @@
         <entry key="app/src/main/res/drawable-v24/plot_tomatoes.xml" value="0.2465" />
         <entry key="app/src/main/res/drawable-v24/plot_watermelons.xml" value="0.2465" />
         <entry key="app/src/main/res/drawable/broccoli_background.xml" value="0.2465" />
+        <entry key="app/src/main/res/drawable/ic_account_circle.xml" value="0.346" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.2975" />
         <entry key="app/src/main/res/drawable/ic_baseline_login_24.xml" value="0.2975" />
         <entry key="app/src/main/res/drawable/ic_broccoli.xml" value="0.2465" />
@@ -25,6 +26,10 @@
         <entry key="app/src/main/res/drawable/ic_outline_explore_24.xml" value="0.2465" />
         <entry key="app/src/main/res/drawable/ic_outline_settings_24.xml" value="0.2975" />
         <entry key="app/src/main/res/drawable/login_background.xml" value="0.2975" />
+        <entry key="app/src/main/res/drawable/menu_ic_account.xml" value="0.346" />
+        <entry key="app/src/main/res/drawable/menu_ic_explore.xml" value="0.346" />
+        <entry key="app/src/main/res/drawable/menu_ic_friends.xml" value="0.346" />
+        <entry key="app/src/main/res/drawable/menu_ic_garden.xml" value="0.346" />
         <entry key="app/src/main/res/drawable/plot_broccoli.xml" value="0.2465" />
         <entry key="app/src/main/res/drawable/plot_vegetable.xml" value="0.2465" />
         <entry key="app/src/main/res/drawable/plot_vegetables.xml" value="0.2525" />
