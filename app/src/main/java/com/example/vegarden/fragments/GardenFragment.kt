@@ -225,6 +225,12 @@ class GardenFragment : Fragment() {
                 val data = document.data!!.toMap()
                 val rows = (data["rows"] as Long).toInt()
                 val cols = (data["columns"] as Long).toInt()
+                val width = (data["width"] as Long).toInt()
+                val height = (data["height"] as Long).toInt()
+                val plotSize = (data["plotSize"] as Long).toInt()
+                //Garden description
+                binding.tvGardenDescription.text =
+                    getString(R.string.garden_description, width, height, width * height, plotSize)
 
                 // Retrieve and convert to object the vegetable garden
                 db.collection("gardens").document(gardenUserUid).collection("plots").get()

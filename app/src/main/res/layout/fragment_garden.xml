@@ -16,8 +16,19 @@
             <LinearLayout
                 android:id="@+id/garden"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvGardenDescription"
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                tools:text="@string/garden_description"
+                android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@+id/garden" />
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -38,12 +49,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="16dp"
-                tools:text="@string/my_posts_and_photos"
+                android:layout_marginTop="22dp"
                 android:textColor="@color/black"
                 android:textSize="28sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/garden" />
+                app:layout_constraintTop_toBottomOf="@+id/tvGardenDescription"
+                tools:text="@string/my_posts_and_photos" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPosts"

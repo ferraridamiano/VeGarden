@@ -66,6 +66,7 @@
     <string name="change_garden_size">Change garden size</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="garden_description">This garden has a size of %1$d m x %2$d m (total area: %3$d m²). Each plot has a size of %4$d m².</string>
     <string-array name="crops_list">
         <item>@string/uncultivated</item>
         <item>@string/broccoli</item>
