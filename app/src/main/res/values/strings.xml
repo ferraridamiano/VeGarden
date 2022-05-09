@@ -15,7 +15,7 @@
     <string name="already_have_an_account">Already have an account?</string>
     <string name="width">Width</string>
     <string name="height">Height</string>
-    <string name="total_area">Total area:</string>
+    <string name="total_area">Total area: <b>%1$s m²</b></string>
     <string name="next">Next</string>
     <string name="garden_size_question">What is the size of your vegetable garden?</string>
     <string name="post_a_photo">Post a photo</string>
@@ -45,6 +45,7 @@
     <string name="my_friends_posts">My friends\' posts</string>
     <string name="explore_other_vegardens">Explore other VeGardens</string>
     <string name="user_vegarden">%1$s\'s VeGarden</string>
+    <string name="change_garden_size_alert">If you change the garden size you will loose all the data of your VeGarden. Are you sure you want to continue?</string>
 
     <string name="uncultivated">Uncultivated</string>
     <string name="watermelon">Watermelons</string>
@@ -60,6 +61,11 @@
     <string name="leeks">Leeks</string>
     <string name="radishes">Radishes</string>
     <string name="other">Other</string>
+    <string name="the_size_of_a_plot_is">The size of a plot is <b>%1$s m²</b></string>
+    <string name="what_is_plot">A plot is the ground unit where you can sow one type of vegetable</string>
+    <string name="change_garden_size">Change garden size</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string-array name="crops_list">
         <item>@string/uncultivated</item>
         <item>@string/broccoli</item>

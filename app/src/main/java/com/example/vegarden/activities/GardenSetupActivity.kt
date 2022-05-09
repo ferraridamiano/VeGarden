@@ -9,17 +9,20 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.example.vegarden.R
 import com.example.vegarden.models.GardenPlot
 import com.example.vegarden.databinding.ActivityGardenSetupBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlin.math.sqrt
 
 class GardenSetupActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityGardenSetupBinding
     private lateinit var auth: FirebaseAuth
+    private var plotSize: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,19 +33,13 @@ class GardenSetupActivity : AppCompatActivity() {
         auth = Firebase.auth
         val db = Firebase.firestore
 
+        binding.tvPlotSize.text = getString(R.string.the_size_of_a_plot_is, plotSize.toString())
+
         // Depending on text it will show/hide elements and compute the area
 
         binding.etWidth.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if (isSizeCorrect(s.toString(), binding.etHeight.text.toString())) {
-                    binding.tvarea.text =
-                        "${s.toString().toInt() * binding.etHeight.text.toString().toInt()} m²"
-                    binding.layoutArea.visibility = View.VISIBLE
-                    binding.fabNext.visibility = View.VISIBLE
-                } else {
-                    binding.layoutArea.visibility = View.INVISIBLE
-                    binding.fabNext.visibility = View.INVISIBLE
-                }
+                onTextChange(s.toString(), binding.etHeight.text.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -51,15 +48,7 @@ class GardenSetupActivity : AppCompatActivity() {
 
         binding.etHeight.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if (isSizeCorrect(s.toString(), binding.etWidth.text.toString())) {
-                    binding.tvarea.text =
-                        "${s.toString().toInt() * binding.etWidth.text.toString().toInt()} m²"
-                    binding.layoutArea.visibility = View.VISIBLE
-                    binding.fabNext.visibility = View.VISIBLE
-                } else {
-                    binding.layoutArea.visibility = View.INVISIBLE
-                    binding.fabNext.visibility = View.INVISIBLE
-                }
+                onTextChange(binding.etWidth.text.toString(), s.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -99,8 +88,8 @@ class GardenSetupActivity : AppCompatActivity() {
         binding.fabNext.setOnClickListener {
             // Create a new empty vegetable garden
             // Here we want that the smaller number is the columns and the greater value is the rows
-            val rows: Int
-            val columns: Int
+            var rows: Int
+            var columns: Int
             val a = binding.etWidth.text.toString().toInt()
             val b = binding.etHeight.text.toString().toInt()
             if (a > b) {
@@ -111,9 +100,14 @@ class GardenSetupActivity : AppCompatActivity() {
                 columns = a
             }
 
+            // A bigger plot size leads to smaller grid
+            rows = (rows / sqrt(plotSize.toDouble())).toInt()
+            columns = (columns / sqrt(plotSize.toDouble())).toInt()
+
             val newGarden = hashMapOf(
                 "rows" to rows,
                 "columns" to columns,
+                "plotSize" to plotSize,
             )
 
             // Generate an empty vegetable garden
@@ -133,7 +127,7 @@ class GardenSetupActivity : AppCompatActivity() {
             }
 
             db.collection("gardens").document(auth.currentUser!!.uid).set(newGarden)
-                .addOnSuccessListener { _ ->
+                .addOnSuccessListener {
                     Log.d(
                         ContentValues.TAG,
                         "DocumentSnapshot added with ID: ${auth.currentUser!!.uid}"
@@ -146,6 +140,29 @@ class GardenSetupActivity : AppCompatActivity() {
                     Toast.makeText(this, "Connection error. Try again later...", Toast.LENGTH_SHORT)
                         .show()
                 }
+        }
+    }
+
+    private fun onTextChange(width: String, height: String) {
+        if (isSizeCorrect(width, height)) {
+            val intWidth = width.toInt()
+            val intHeight = height.toInt()
+            val area = intWidth * intHeight
+            binding.tvArea.text = getString(
+                R.string.total_area,
+                area.toString()
+            )
+            plotSize = when (area) {
+                in 1..100 -> 1
+                in 100..500 -> 4
+                else -> 9
+            }
+            binding.tvPlotSize.text = getString(R.string.the_size_of_a_plot_is, plotSize.toString())
+            binding.tvArea.visibility = View.VISIBLE
+            binding.fabNext.visibility = View.VISIBLE
+        } else {
+            binding.tvArea.visibility = View.INVISIBLE
+            binding.fabNext.visibility = View.INVISIBLE
         }
     }
 }

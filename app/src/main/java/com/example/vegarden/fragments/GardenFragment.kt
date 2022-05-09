@@ -113,6 +113,22 @@ class GardenFragment : Fragment() {
                     .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, null))
                     .create()
             )
+
+            binding.speedDial.setOnActionSelectedListener(SpeedDialView.OnActionSelectedListener { actionItem ->
+                when (actionItem.id) {
+                    R.id.addPhoto -> {
+                        fileChooser.launch("image/*")
+                        binding.speedDial.close()
+                        return@OnActionSelectedListener true // close with animation
+                    }
+                    R.id.addPost -> {
+                        startActivity(Intent(requireContext(), AddPostActivity::class.java))
+                        binding.speedDial.close()
+                        return@OnActionSelectedListener true // close with animation
+                    }
+                }
+                false
+            })
         } else {
             db.collection("users").document(gardenUserUid).get()
                 .addOnSuccessListener { document ->
@@ -149,23 +165,6 @@ class GardenFragment : Fragment() {
                 override fun onToggleChanged(isOpen: Boolean) {}
             })
         }
-
-        binding.speedDial.setOnActionSelectedListener(SpeedDialView.OnActionSelectedListener { actionItem ->
-            when (actionItem.id) {
-                R.id.addPhoto -> {
-                    fileChooser.launch("image/*")
-
-                    binding.speedDial.close()
-                    return@OnActionSelectedListener true // close with animation
-                }
-                R.id.addPost -> {
-                    startActivity(Intent(requireContext(), AddPostActivity::class.java))
-                    binding.speedDial.close()
-                    return@OnActionSelectedListener true // close with animation
-                }
-            }
-            false
-        })
     }
 
     private val fileChooser =

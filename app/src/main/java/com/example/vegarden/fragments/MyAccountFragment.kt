@@ -2,15 +2,18 @@ package com.example.vegarden.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.vegarden.R
-import com.example.vegarden.models.User
+import com.example.vegarden.activities.GardenSetupActivity
 import com.example.vegarden.activities.SigninActivity
 import com.example.vegarden.databinding.FragmentMyAccountBinding
+import com.example.vegarden.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -66,6 +69,33 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.flFragment, MyFriendsFragment())
                 ?.addToBackStack(null)?.commit()
+        }
+
+        binding.llChangeGardenSize.setOnClickListener {
+            AlertDialog.Builder(requireContext())
+                .setTitle(resources.getString(R.string.change_garden_size))
+                .setMessage(resources.getString(R.string.change_garden_size_alert))
+                .setPositiveButton(R.string.yes) { _, _ ->
+                    val gardenRef = db.collection("gardens").document(auth.currentUser!!.uid)
+                    gardenRef.collection("plots").get()
+                        .addOnSuccessListener { documents ->
+                            //delete everything and open GardenSetupActivity
+                            db.runBatch {
+                                Log.d("MyAccountFragment", documents.size().toString())
+                                documents.forEach { document ->
+                                    Log.d("MyAccountFragment", document.reference.toString())
+                                    document.reference.delete()
+                                }
+                                gardenRef.delete()
+                            }.addOnSuccessListener {
+                                startActivity(Intent(requireContext(), GardenSetupActivity::class.java))
+                                activity?.finish()
+                            }
+                        }
+                }
+                .setNegativeButton(R.string.no, null)
+                .setIcon(R.drawable.ic_warning)
+                .show()
         }
 
         binding.llLogout.setOnClickListener {
