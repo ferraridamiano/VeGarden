@@ -42,7 +42,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_main2.xml" value="0.3536458333333333" />
         <entry key="app/src/main/res/layout/activity_my_friends.xml" value="0.24114583333333334" />
-        <entry key="app/src/main/res/layout/activity_signin.xml" value="0.3536458333333333" />
+        <entry key="app/src/main/res/layout/activity_signin.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_signup.xml" value="0.3536458333333333" />
         <entry key="app/src/main/res/layout/fragment_explore.xml" value="0.3536458333333333" />
         <entry key="app/src/main/res/layout/fragment_feed.xml" value="0.21770833333333334" />
@@ -59,6 +59,7 @@
         <entry key="app/src/main/res/layout/prova.xml" value="0.3536458333333333" />
         <entry key="app/src/main/res/menu/bottom_nav_bar.xml" value="0.18020833333333333" />
         <entry key="app/src/main/res/menu/speed_dial.xml" value="0.3536458333333333" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.346" />
       </map>
     </option>
   </component>
