@@ -2,7 +2,6 @@ package com.example.vegarden.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -81,14 +80,15 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
                         .addOnSuccessListener { documents ->
                             //delete everything and open GardenSetupActivity
                             db.runBatch {
-                                Log.d("MyAccountFragment", documents.size().toString())
-                                documents.forEach { document ->
-                                    Log.d("MyAccountFragment", document.reference.toString())
-                                    document.reference.delete()
-                                }
+                                documents.forEach { document -> document.reference.delete() }
                                 gardenRef.delete()
                             }.addOnSuccessListener {
-                                startActivity(Intent(requireContext(), GardenSetupActivity::class.java))
+                                startActivity(
+                                    Intent(
+                                        requireContext(),
+                                        GardenSetupActivity::class.java
+                                    )
+                                )
                                 activity?.finish()
                             }
                         }

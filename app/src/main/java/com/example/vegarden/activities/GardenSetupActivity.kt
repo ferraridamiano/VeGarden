@@ -88,25 +88,27 @@ class GardenSetupActivity : AppCompatActivity() {
         binding.fabNext.setOnClickListener {
             // Create a new empty vegetable garden
             // Here we want that the smaller number is the columns and the greater value is the rows
-            var rows: Int
-            var columns: Int
+            val height: Int
+            val width: Int
             val a = binding.etWidth.text.toString().toInt()
             val b = binding.etHeight.text.toString().toInt()
             if (a > b) {
-                rows = a
-                columns = b
+                height = a
+                width = b
             } else {
-                rows = b
-                columns = a
+                height = b
+                width = a
             }
 
             // A bigger plot size leads to smaller grid
-            rows = (rows / sqrt(plotSize.toDouble())).toInt()
-            columns = (columns / sqrt(plotSize.toDouble())).toInt()
+            val rows = (height / sqrt(plotSize.toDouble())).toInt()
+            val columns = (width / sqrt(plotSize.toDouble())).toInt()
 
             val newGarden = hashMapOf(
                 "rows" to rows,
                 "columns" to columns,
+                "width" to width,
+                "height" to height,
                 "plotSize" to plotSize,
             )
 
@@ -153,8 +155,8 @@ class GardenSetupActivity : AppCompatActivity() {
                 area.toString()
             )
             plotSize = when (area) {
-                in 1..100 -> 1
-                in 100..500 -> 4
+                in 1..80 -> 1
+                in 80..260 -> 4
                 else -> 9
             }
             binding.tvPlotSize.text = getString(R.string.the_size_of_a_plot_is, plotSize.toString())
