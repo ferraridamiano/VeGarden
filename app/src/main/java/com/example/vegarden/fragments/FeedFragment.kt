@@ -5,14 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vegarden.R
 import com.example.vegarden.adapters.PostsAdapter
 import com.example.vegarden.databinding.FragmentFeedBinding
 import com.example.vegarden.models.PostsViewModel
 import com.example.vegarden.models.User
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -82,12 +80,7 @@ class FeedFragment : Fragment() {
                 .get()
                 .addOnSuccessListener { documents ->
                     if (documents.isEmpty) {
-                        Snackbar.make(
-                            requireActivity().findViewById(R.id.flFragment),
-                            "There are no posts",
-                            Snackbar.LENGTH_SHORT
-                        ).setAnchorView(requireActivity().findViewById(R.id.bottomNavigationBar))
-                            .setAction("") {}.show()
+                        binding.tvNoPostsFound.visibility = View.VISIBLE
                     } else {
                         val userUids = mutableSetOf<String>()
                         // Reduce all the UIDs with get rid of non repeating elements
@@ -127,24 +120,14 @@ class FeedFragment : Fragment() {
                 .addOnSuccessListener { document ->
                     val user = document.toObject(User::class.java)
                     if (user!!.myFriends.isEmpty()) {
-                        Snackbar.make(
-                            requireActivity().findViewById(R.id.flFragment),
-                            "There are no posts of your friends",
-                            Snackbar.LENGTH_SHORT
-                        ).setAnchorView(requireActivity().findViewById(R.id.bottomNavigationBar))
-                            .setAction("") {}.show()
+                        binding.tvNoPostsFound.visibility = View.VISIBLE
                     } else {
                         db.collection("posts").whereIn("user", user.myFriends)
                             .orderBy("timestamp", Query.Direction.DESCENDING).limit(10)
                             .get()
                             .addOnSuccessListener { documents ->
                                 if (documents.isEmpty) {
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "No posts found",
-                                        Toast.LENGTH_SHORT
-                                    )
-                                        .show()
+                                    binding.tvNoPostsFound.visibility = View.VISIBLE
                                 } else {
                                     val userUids = mutableSetOf<String>()
                                     // Reduce all the UIDs with get rid of non repeating elements

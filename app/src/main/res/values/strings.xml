@@ -62,6 +62,8 @@
     <string name="connection_error">Connection error, check if you are connected to internet and try again later</string>
     <string name="plot_details">Plot details</string>
     <string name="write_something_or_exit">Write something or exit</string>
+    <string name="no_posts_found">No posts found</string>
+    <string name="error_picking_image">Error while picking the image</string>
 
     <string name="uncultivated">Uncultivated</string>
     <string name="watermelon">Watermelons</string>

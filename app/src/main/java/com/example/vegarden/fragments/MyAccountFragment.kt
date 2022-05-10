@@ -79,9 +79,9 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
                     gardenRef.collection("plots").get()
                         .addOnSuccessListener { documents ->
                             //delete everything and open GardenSetupActivity
-                            db.runBatch {
-                                documents.forEach { document -> document.reference.delete() }
-                                gardenRef.delete()
+                            db.runBatch { batch ->
+                                documents.forEach { document -> batch.delete(document.reference)}
+                                batch.delete(gardenRef)
                             }.addOnSuccessListener {
                                 startActivity(
                                     Intent(

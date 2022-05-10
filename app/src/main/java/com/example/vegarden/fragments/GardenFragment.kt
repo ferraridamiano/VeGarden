@@ -1,25 +1,23 @@
 package com.example.vegarden.fragments
 
-import android.content.ContentValues
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.vegarden.*
+import com.example.vegarden.R
 import com.example.vegarden.activities.AddPostActivity
 import com.example.vegarden.activities.ChangeCropActivity
 import com.example.vegarden.adapters.PostsAdapter
 import com.example.vegarden.databinding.FragmentGardenBinding
+import com.example.vegarden.getPlotDrawable
 import com.example.vegarden.models.GardenPlot
 import com.example.vegarden.models.PostsViewModel
 import com.example.vegarden.models.User
@@ -47,6 +45,8 @@ class GardenFragment : Fragment() {
     private var _binding: FragmentGardenBinding? = null
     private var isMyGarden = true
     private lateinit var gardenUserUid: String
+    private var postsLoaded = false
+    private var gardenLoaded = false
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
@@ -79,10 +79,6 @@ class GardenFragment : Fragment() {
         // Appbar
         activity?.title =
             resources.getString(if (isMyGarden) R.string.my_vegarden else R.string.app_name)
-        // Get garden and refresh thew fragment
-        refreshGarden()
-        // Retrieve and display posts
-        refreshPosts()
         //Change title of posts
         if (isMyGarden) {
             binding.tvPostsPhotos.text = resources.getString(R.string.my_posts_and_photos)
@@ -144,7 +140,6 @@ class GardenFragment : Fragment() {
 
             binding.speedDial.setOnChangeListener(object : SpeedDialView.OnChangeListener {
                 override fun onMainActionSelected(): Boolean {
-                    Log.d("GardenFragment", "Speed dial toggle state changed.")
                     val firestoreRef = db.collection("users").document(auth.currentUser!!.uid)
                     firestoreRef.get().addOnSuccessListener { document ->
                         val currentUser = document.toObject(User::class.java)!!
@@ -174,46 +169,44 @@ class GardenFragment : Fragment() {
                     storage.reference.child("images/$gardenUserUid-${System.currentTimeMillis()}")
                 ref.putFile(imageUri).continueWithTask { task ->
                     if (!task.isSuccessful) {
-                        task.exception?.let {
-                            throw it
-                        }
+                        Snackbar.make(
+                            requireActivity().findViewById(R.id.flFragment),
+                            getString(R.string.error_picking_image),
+                            Snackbar.LENGTH_SHORT
+                        ).setAnchorView(requireActivity().findViewById(R.id.speedDial)).show()
                     }
                     ref.downloadUrl
-                }.addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val downloadUri = task.result
-                        val newPost = hashMapOf(
-                            "user" to gardenUserUid,
-                            "type" to "photo",
-                            "content" to downloadUri,
-                            "timestamp" to Calendar.getInstance().time
-                        )
-                        db.collection("posts").add(newPost)
-                            .addOnSuccessListener {
-                                Snackbar.make(
-                                    requireActivity().findViewById(R.id.flFragment),
-                                    "Post added", Snackbar.LENGTH_SHORT
-                                ).setAnchorView(requireActivity().findViewById(R.id.speedDial))
-                                    .setAction("") {}.show()
-                                refreshPosts()
-                            }.addOnFailureListener {
-                                Snackbar.make(
-                                    requireActivity().findViewById(R.id.flFragment),
-                                    "Error connecting to internet",
-                                    Snackbar.LENGTH_SHORT
-                                ).setAnchorView(requireActivity().findViewById(R.id.speedDial))
-                                    .setAction("") {}.show()
-                            }
-                    } else {
-                        // TODO Handle failures
-                    }
+                }.addOnSuccessListener { downloadUri ->
+                    val newPost = hashMapOf(
+                        "user" to gardenUserUid,
+                        "type" to "photo",
+                        "content" to downloadUri,
+                        "timestamp" to Calendar.getInstance().time
+                    )
+                    db.collection("posts").add(newPost)
+                        .addOnSuccessListener {
+                            refreshPosts()
+                        }.addOnFailureListener {
+                            Snackbar.make(
+                                requireActivity().findViewById(R.id.flFragment),
+                                getString(R.string.connection_error),
+                                Snackbar.LENGTH_SHORT
+                            ).setAnchorView(requireActivity().findViewById(R.id.speedDial)).show()
+                        }
+                }.addOnFailureListener {
+                    Snackbar.make(
+                        requireActivity().findViewById(R.id.flFragment),
+                        getString(R.string.connection_error),
+                        Snackbar.LENGTH_SHORT
+                    ).setAnchorView(requireActivity().findViewById(R.id.speedDial)).show()
                 }
             }
         }
 
-
     override fun onResume() {
         super.onResume()
+        postsLoaded = false
+        gardenLoaded = false
         refreshGarden()
         refreshPosts()
     }
@@ -278,14 +271,24 @@ class GardenFragment : Fragment() {
                         )
                         binding.garden.removeAllViews()
                         garden!!.forEach { binding.garden.addView(it) }
-                        binding.progressBar.visibility = View.GONE
-
+                        gardenLoaded = true
+                        checkLoadingStatusAndShow()
                     }
+            }
+            .addOnFailureListener {
+                Snackbar.make(
+                    requireActivity().findViewById(R.id.flFragment),
+                    getString(R.string.connection_error),
+                    Snackbar.LENGTH_SHORT
+                ).setAnchorView(requireActivity().findViewById(R.id.speedDial)).show()
+            }
+    }
 
-            }
-            .addOnFailureListener { exception ->
-                Log.w(ContentValues.TAG, "Error getting documents.", exception)
-            }
+    private fun checkLoadingStatusAndShow(){
+        if(gardenLoaded && postsLoaded){
+            binding.progressBar.visibility = View.GONE
+            binding.nestedScrollView.visibility = View.VISIBLE
+        }
     }
 
     private fun refreshPosts() {
@@ -321,14 +324,20 @@ class GardenFragment : Fragment() {
                         )
                     }
                     adapter.notifyItemRangeChanged(0, arrayPosts.size)
+                    postsLoaded = true
+                    checkLoadingStatusAndShow()
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.w(ContentValues.TAG, "Error getting documents.", exception)
-                Toast.makeText(requireContext(), "Error connecting to internet", Toast.LENGTH_SHORT)
-                    .show()
+            .addOnFailureListener {
+                Snackbar.make(
+                    requireActivity().findViewById(R.id.flFragment),
+                    getString(R.string.connection_error),
+                    Snackbar.LENGTH_SHORT
+                ).setAnchorView(requireActivity().findViewById(R.id.speedDial)).show()
             }
     }
+
+    // Utility functions to draw the garden
 
     private fun createVegetableGarden(
         garden: ArrayList<ArrayList<GardenPlot>>,
