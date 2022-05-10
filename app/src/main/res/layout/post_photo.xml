@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
-            android:textColor="@color/userPostTextColor"
+            android:textColor="?android:textColorPrimary"
             android:textSize="18sp"
             android:textStyle="bold"
             tools:text="Name Surname" />
@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
-            android:textColor="@color/textTimestamp"
+            android:textColor="?android:textColorPrimary"
             android:textSize="14sp"
             tools:text="xx days ago" />
     </FrameLayout>

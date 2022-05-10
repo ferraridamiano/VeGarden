@@ -18,7 +18,7 @@
             android:id="@+id/tvPostText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/textPost"
+            android:textColor="?android:textColorPrimary"
             android:textSize="18sp"
             tools:text="This is a post about my wonderful vegetable garden" />
     </FrameLayout>
@@ -28,12 +28,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="27dp"
-        android:background="@color/white"
+        android:background="?android:windowBackground"
         android:clickable="true"
         android:focusable="true"
         android:paddingHorizontal="3dp"
         android:paddingBottom="8dp"
-        android:textColor="@color/userPostTextColor"
+        android:textColor="?android:textColorPrimary"
         android:textSize="18sp"
         android:textStyle="bold"
         tools:text="Name Surname" />
@@ -45,9 +45,9 @@
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="27dp"
         android:layout_marginBottom="7dp"
-        android:background="@color/white"
+        android:background="?android:windowBackground"
         android:paddingHorizontal="3dp"
-        android:textColor="@color/textTimestamp"
+        android:textColor="?android:textColorPrimary"
         android:textSize="14sp"
         tools:text="xx days ago" />
 </FrameLayout>

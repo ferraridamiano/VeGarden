@@ -52,7 +52,9 @@
                     android:id="@+id/tilWidth"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/black"
+                    app:boxStrokeColor="@color/black">
 
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/etWidth"
@@ -60,7 +62,8 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/width"
                         android:inputType="number"
-                        android:maxLength="3" />
+                        android:maxLength="3"
+                        android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -92,7 +95,9 @@
                     android:id="@+id/tilHeight"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/black"
+                    app:boxStrokeColor="@color/black">
 
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/etHeight"
@@ -100,7 +105,8 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/height"
                         android:inputType="number"
-                        android:maxLength="3" />
+                        android:maxLength="3"
+                        android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -136,9 +142,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
-            tools:text="@string/the_size_of_a_plot_is"
             android:textColor="@color/black"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            tools:text="@string/the_size_of_a_plot_is" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -148,7 +154,7 @@
             android:gravity="center"
             android:text="@string/what_is_plot"
             android:textColor="@color/black"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
     </LinearLayout>
 

@@ -1,17 +1,38 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-<!-- Base application theme. -->
-<style name="Theme.VeGarden" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-    <!-- Primary brand color. -->
-    <item name="colorPrimary">@color/primary</item>
-    <item name="colorPrimaryVariant">@color/primary</item>
-    <item name="colorOnPrimary">@color/white</item>
-    <!-- Secondary brand color. -->
-    <item name="colorSecondary">@color/secondary</item>
-    <item name="colorSecondaryVariant">@color/secondary</item>
-    <item name="colorOnSecondary">@color/black</item>
-    <!-- Status bar color. -->
-    <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-    <!-- Customize your theme here. -->
-</style>
+    <!-- Base application theme. -->
+    <style name="Theme.VeGarden" parent="Theme.MaterialComponents.DayNight">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <item name="actionBarStyle">@style/abStyle</item>
+        <item name="android:strokeColor">@color/white</item>
+    </style>
+
+    <style name="abStyle" parent="@style/Widget.MaterialComponents.ActionBar.Primary">
+        <item name="android:background">@color/primary</item>
+    </style>
+
+    <style name="Theme.VeGarden.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <item name="android:strokeColor">@color/white</item>
+    </style>
 
 </resources>

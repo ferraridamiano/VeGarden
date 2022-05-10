@@ -45,6 +45,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
+            android:textColorHint="@color/black"
+            app:boxStrokeColor="@color/black"
             app:errorEnabled="true">
 
             <androidx.appcompat.widget.AppCompatEditText
@@ -52,7 +54,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/name"
-                android:inputType="textCapWords" />
+                android:inputType="textCapWords"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -62,6 +65,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
+            android:textColorHint="@color/black"
+            app:boxStrokeColor="@color/black"
             app:errorEnabled="true">
 
             <androidx.appcompat.widget.AppCompatEditText
@@ -69,7 +74,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/surname"
-                android:inputType="textCapWords" />
+                android:inputType="textCapWords"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -79,6 +85,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
+            android:textColorHint="@color/black"
+            app:boxStrokeColor="@color/black"
             app:errorEnabled="true">
 
             <androidx.appcompat.widget.AppCompatEditText
@@ -86,7 +94,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/email"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -96,6 +105,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
+            android:textColorHint="@color/black"
+            app:boxStrokeColor="@color/black"
             app:errorEnabled="true">
 
             <androidx.appcompat.widget.AppCompatEditText
@@ -103,7 +114,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -113,6 +125,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
+            android:textColorHint="@color/black"
+            app:boxStrokeColor="@color/black"
             app:errorEnabled="true">
 
             <androidx.appcompat.widget.AppCompatEditText
@@ -120,7 +134,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/confirm_password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
@@ -134,13 +149,13 @@
                 android:layout_marginBottom="16dp"
                 android:gravity="center"
                 android:text="@string/already_have_an_account"
+                android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tvSignin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
