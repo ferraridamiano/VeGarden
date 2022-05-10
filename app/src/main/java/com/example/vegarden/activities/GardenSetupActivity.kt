@@ -1,17 +1,15 @@
 package com.example.vegarden.activities
 
-import android.content.ContentValues
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import com.example.vegarden.R
 import com.example.vegarden.models.GardenPlot
 import com.example.vegarden.databinding.ActivityGardenSetupBinding
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -60,7 +58,7 @@ class GardenSetupActivity : AppCompatActivity() {
             run {
                 val etText = binding.etWidth.text.toString()
                 if (!focus && (etText.isBlank() || etText.toInt() <= 0)) {
-                    binding.tilWidth.error = "Error"
+                    binding.tilWidth.error = getString(R.string.not_valid_number)
                     // The following line prevent the error icon to be displayed on top of the "m"
                     binding.tvWidthUnit.visibility = View.INVISIBLE
                 } else {
@@ -74,7 +72,7 @@ class GardenSetupActivity : AppCompatActivity() {
             run {
                 val etText = binding.etHeight.text.toString()
                 if (!focus && (etText.isBlank() || etText.toInt() <= 0)) {
-                    binding.tilHeight.error = "Error"
+                    binding.tilHeight.error = getString(R.string.not_valid_number)
                     // The following line prevent the error icon to be displayed on top of the "m"
                     binding.tvHeightUnit.visibility = View.INVISIBLE
                 } else {
@@ -124,24 +122,17 @@ class GardenSetupActivity : AppCompatActivity() {
                         batch.set(plotsRef.document(), mapPlot)
                     }
                 }
-            }.addOnCompleteListener {
-                Log.d("GardenFragment", "done")
+                batch.set(db.collection("gardens").document(auth.currentUser!!.uid), newGarden)
+            }.addOnSuccessListener {
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }.addOnFailureListener {
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.connection_error),
+                    Snackbar.LENGTH_LONG
+                ).show()
             }
-
-            db.collection("gardens").document(auth.currentUser!!.uid).set(newGarden)
-                .addOnSuccessListener {
-                    Log.d(
-                        ContentValues.TAG,
-                        "DocumentSnapshot added with ID: ${auth.currentUser!!.uid}"
-                    )
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-                }
-                .addOnFailureListener { e ->
-                    Log.w(ContentValues.TAG, "Error adding document", e)
-                    Toast.makeText(this, "Connection error. Try again later...", Toast.LENGTH_SHORT)
-                        .show()
-                }
         }
     }
 

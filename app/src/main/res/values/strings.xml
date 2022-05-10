@@ -19,7 +19,7 @@
     <string name="next">Next</string>
     <string name="garden_size_question">What is the size of your vegetable garden?</string>
     <string name="post_a_photo">Post a photo</string>
-    <string name="says">says:</string>
+    <string name="name_surname_says">%1$s %2$s says:</string>
     <string name="write_a_post">Write a post</string>
     <string name="my_vegarden">My VeGarden</string>
     <string name="settings">Settings</string>
@@ -46,6 +46,22 @@
     <string name="explore_other_vegardens">Explore other VeGardens</string>
     <string name="user_vegarden">%1$s\'s VeGarden</string>
     <string name="change_garden_size_alert">If you change the garden size you will loose all the data of your VeGarden. Are you sure you want to continue?</string>
+    <string name="the_size_of_a_plot_is">The size of a plot is <b>%1$s m²</b></string>
+    <string name="what_is_plot">A plot is the ground unit where you can sow one type of vegetable</string>
+    <string name="change_garden_size">Change garden size</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="garden_description">This garden has a size of %1$d m x %2$d m (total area: %3$d m²). Each plot has a size of %4$d m².</string>
+    <string name="invalid_email">Not a valid e-mail address</string>
+    <string name="invalid_password">Must contain at least 8 character</string>
+    <string name="invalid_email_password">e-mail or password are not valid</string>
+    <string name="empty_field">This field should not be empty</string>
+    <string name="different_passwords">The two passwords are different</string>
+    <string name="registration_error">Not able to register the user, check the internet connection or try later</string>
+    <string name="not_valid_number">Not a valid number</string>
+    <string name="connection_error">Connection error, check if you are connected to internet and try again later</string>
+    <string name="plot_details">Plot details</string>
+    <string name="write_something_or_exit">Write something or exit</string>
 
     <string name="uncultivated">Uncultivated</string>
     <string name="watermelon">Watermelons</string>
@@ -61,12 +77,6 @@
     <string name="leeks">Leeks</string>
     <string name="radishes">Radishes</string>
     <string name="other">Other</string>
-    <string name="the_size_of_a_plot_is">The size of a plot is <b>%1$s m²</b></string>
-    <string name="what_is_plot">A plot is the ground unit where you can sow one type of vegetable</string>
-    <string name="change_garden_size">Change garden size</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="garden_description">This garden has a size of %1$d m x %2$d m (total area: %3$d m²). Each plot has a size of %4$d m².</string>
     <string-array name="crops_list">
         <item>@string/uncultivated</item>
         <item>@string/broccoli</item>

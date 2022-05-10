@@ -13,22 +13,23 @@
         android:theme="@style/Theme.VeGarden">
         <activity
             android:name=".activities.ChangeCropActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-        <activity
+            android:exported="false"
             android:parentActivityName=".activities.MainActivity"
-            android:screenOrientation="portrait"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activities.AddPostActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".activities.MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.MainActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SigninActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.VeGarden.NoActionBar"
-            android:exported="true">
+            android:theme="@style/Theme.VeGarden.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,13 +38,13 @@
         </activity>
         <activity
             android:name=".activities.SignupActivity"
-            android:screenOrientation="portrait"
             android:exported="false"
-            android:theme="@style/Theme.VeGarden.NoActionBar"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.VeGarden.NoActionBar" />
         <activity
             android:name=".activities.GardenSetupActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

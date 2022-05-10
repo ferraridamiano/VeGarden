@@ -39,6 +39,10 @@ class ChangeCropActivity : AppCompatActivity() {
         binding = ActivityChangeCropBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //Appbar
+        title = getString(R.string.plot_details)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+
         auth = Firebase.auth
         db = Firebase.firestore
 

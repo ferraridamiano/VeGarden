@@ -7,27 +7,16 @@
     tools:context=".activities.AddPostActivity">
 
     <TextView
-        android:id="@+id/tvNameSurname"
+        android:id="@+id/tvNameSurnameSays"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:visibility="invisible"
         android:textSize="16sp"
+        tools:text="Name Surname says:"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3" />
-
-    <TextView
-        android:id="@+id/tvSays"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:visibility="invisible"
-        android:text="@string/says"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tvNameSurname"
-        app:layout_constraintStart_toEndOf="@+id/tvNameSurname" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPost"
@@ -40,7 +29,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.843"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvNameSurname">
+        app:layout_constraintTop_toBottomOf="@+id/tvNameSurnameSays">
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/etPost"

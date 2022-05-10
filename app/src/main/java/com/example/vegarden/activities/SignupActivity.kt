@@ -1,15 +1,14 @@
 package com.example.vegarden.activities
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
+import com.example.vegarden.R
 import com.example.vegarden.models.User
 import com.example.vegarden.databinding.ActivitySignupBinding
 import com.example.vegarden.isValidEmail
 import com.example.vegarden.isValidPassword
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -40,79 +39,65 @@ class SignupActivity : AppCompatActivity() {
             var error = false
 
             if (name.isBlank()) {
-                binding.tilName.error = "Name field should not be empty"
+                binding.tilName.error = getString(R.string.empty_field)
                 error = true
             } else {
                 binding.tilName.error = null
             }
             if (surname.isBlank()) {
-                binding.tilSurname.error = "Surname field should not be empty"
+                binding.tilSurname.error = getString(R.string.empty_field)
                 error = true
             } else {
                 binding.tilSurname.error = null
             }
             if (!email.isValidEmail()) {
-                binding.tilEmail.error = "Email is not valid"
+                binding.tilEmail.error = getString(R.string.empty_field)
                 error = true
             } else {
                 binding.tilEmail.error = null
             }
             if (!password.isValidPassword()) {
-                binding.tilPassword.error = "The password should contain at least 8 characters"
+                binding.tilPassword.error = getString(R.string.invalid_password)
                 error = true
-            } else if (password != confirmPassword.toString()) {
-                binding.tilPassword.error = "The two passwords are different"
-                binding.tilConfirmPassword.error = "The two passwords are different"
+            } else if (password != confirmPassword) {
+                binding.tilPassword.error = getString(R.string.different_passwords)
+                binding.tilConfirmPassword.error = getString(R.string.different_passwords)
                 error = true
             } else {
                 binding.tilPassword.error = null
                 binding.tilConfirmPassword.error = null
             }
 
+            // Register the user
             if (!error) {
-                createAccount(name, surname, email, password)
+                auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            // Sign in success, update UI with the signed-in user's information
+                            val user = auth.currentUser
+                            val db = Firebase.firestore
+                            // Create a new user with a first and last name
+                            val newUser = User(name, surname, email, user!!.uid)
+                            db.collection("users").document(user.uid).set(newUser)
+                                .addOnSuccessListener { _ ->
+                                    startActivity(Intent(this, GardenSetupActivity::class.java))
+                                    finish()
+                                }
+                                .addOnFailureListener { displayRegistrationError() }
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            displayRegistrationError()
+                        }
+                    }
             }
         }
     }
 
-    private fun createAccount(name: String, surname: String, email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    val user = auth.currentUser
-                    //TODO updateUI(user)
-                    Toast.makeText(
-                        baseContext, "Authentication succeded.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    val db = Firebase.firestore
-                    // Create a new user with a first and last name
-                    val newUser = User(name, surname, email, user!!.uid)
-
-                    db.collection("users").document(user.uid).set(newUser)
-                        .addOnSuccessListener { _ ->
-                            Log.d(TAG, "DocumentSnapshot added with ID: ${user.uid}")
-                            startActivity(Intent(this, GardenSetupActivity::class.java))
-                            finish()
-                        }
-                        .addOnFailureListener { e ->
-                            Log.w(TAG, "Error adding document", e)
-                            Toast.makeText(
-                                this,
-                                "Connection error. Try again later...",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(
-                        baseContext, task.exception.toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    //TODO Error updateUI(null)
-                }
-            }
+    private fun displayRegistrationError() {
+        Snackbar.make(
+            findViewById(android.R.id.content),
+            getString(R.string.registration_error),
+            Snackbar.LENGTH_LONG
+        ).show()
     }
 }

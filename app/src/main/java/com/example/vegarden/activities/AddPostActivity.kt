@@ -2,9 +2,9 @@ package com.example.vegarden.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
+import com.example.vegarden.R
 import com.example.vegarden.databinding.ActivityAddPostBinding
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -25,8 +25,8 @@ class AddPostActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //Appbar
-        title = "Write a post"
-        actionBar?.setDisplayHomeAsUpEnabled(true);
+        title = getString(R.string.write_a_post)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
 
         //Firebase init
         auth = Firebase.auth
@@ -36,17 +36,18 @@ class AddPostActivity : AppCompatActivity() {
             .addOnSuccessListener { document ->
                 val name = document.data!!["name"]
                 val surname = document.data!!["surname"]
-                binding.tvNameSurname.text = "$name $surname"
-                binding.tvNameSurname.visibility = View.VISIBLE
-                binding.tvSays.visibility = View.VISIBLE
-            }.addOnFailureListener {
-                Toast.makeText(this, "Error connecting to internet", Toast.LENGTH_SHORT).show()
+                binding.tvNameSurnameSays.text =
+                    getString(R.string.name_surname_says, name, surname)
             }
 
         binding.fabConfirm.setOnClickListener {
             val text = binding.etPost.text.toString()
             if (text.trim().isBlank()) {
-                Toast.makeText(this, "Write something or exit", Toast.LENGTH_SHORT).show()
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.write_something_or_exit),
+                    Snackbar.LENGTH_LONG
+                ).setAnchorView(binding.fabConfirm).show()
             } else {
                 val newPost = hashMapOf(
                     "user" to auth.currentUser!!.uid,
@@ -56,14 +57,15 @@ class AddPostActivity : AppCompatActivity() {
                 )
                 db.collection("posts").add(newPost)
                     .addOnSuccessListener {
-                        Toast.makeText(this, "Post added", Toast.LENGTH_SHORT).show()
                         finish()
                     }.addOnFailureListener {
-                        Toast.makeText(this, "Error connecting to internet", Toast.LENGTH_SHORT)
-                            .show()
+                        Snackbar.make(
+                            findViewById(android.R.id.content),
+                            getString(R.string.connection_error),
+                            Snackbar.LENGTH_LONG
+                        ).setAnchorView(binding.fabConfirm).show()
                     }
             }
         }
-
     }
 }
