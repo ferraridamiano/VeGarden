@@ -47,7 +47,7 @@
     <string name="user_vegarden">%1$s\'s VeGarden</string>
     <string name="change_garden_size_alert">If you change the garden size you will loose all the data of your VeGarden. Are you sure you want to continue?</string>
     <string name="the_size_of_a_plot_is">The size of a plot is <b>%1$s m²</b></string>
-    <string name="what_is_plot">A plot is the ground unit where you can sow one type of vegetable</string>
+    <string name="what_is_plot">A plot is the ground unit where you can sow one type of crop</string>
     <string name="change_garden_size">Change garden size</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -59,7 +59,7 @@
     <string name="different_passwords">The two passwords are different</string>
     <string name="registration_error">Not able to register the user, check the internet connection or try later</string>
     <string name="not_valid_number">Not a valid number</string>
-    <string name="connection_error">Connection error, check if you are connected to internet and try again later</string>
+    <string name="connection_error">Connection error, check if you are connected to internet or try later</string>
     <string name="plot_details">Plot details</string>
     <string name="write_something_or_exit">Write something or exit</string>
     <string name="no_posts_found">No posts found</string>

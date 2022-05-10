@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import android.widget.NumberPicker
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.vegarden.models.GardenPlot
@@ -115,7 +114,6 @@ class ChangeCropActivity : AppCompatActivity() {
                     .get().addOnSuccessListener {
                         val reference = it.first().reference
                         reference.update(confirmedPlot.toMap()).addOnSuccessListener {
-                            Toast.makeText(this, "Plot saved", Toast.LENGTH_SHORT).show()
                             finish()
                         }
                     }
