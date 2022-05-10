@@ -3,6 +3,7 @@ package com.example.vegarden.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.vegarden.R
 import com.example.vegarden.databinding.ActivitySigninBinding
 import com.example.vegarden.isValidEmail
@@ -23,6 +24,18 @@ class SigninActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = Firebase.auth
+
+        //Read theme and apply it
+        val prefs = getSharedPreferences("Settings", MODE_PRIVATE)
+        when (prefs.getInt("selectedTheme", 0)) {
+            // Light theme
+            0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            // Dark theme
+            1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            // System default
+            2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
+
         // Check if user is signed in (non-null) and update UI accordingly
         if (auth.currentUser != null) {
             startActivity(Intent(this, MainActivity::class.java))

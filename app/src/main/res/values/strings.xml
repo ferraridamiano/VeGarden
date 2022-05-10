@@ -64,6 +64,12 @@
     <string name="write_something_or_exit">Write something or exit</string>
     <string name="no_posts_found">No posts found</string>
     <string name="error_picking_image">Error while picking the image</string>
+    <string name="theme">Theme</string>
+    <string-array name="theme_list">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>System default</item>
+    </string-array>
 
     <string name="uncultivated">Uncultivated</string>
     <string name="watermelon">Watermelons</string>

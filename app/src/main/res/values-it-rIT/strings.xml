@@ -65,6 +65,12 @@
     <string name="write_something_or_exit">Scrivi qualcosa o esci</string>
     <string name="no_posts_found">Nessun post trovato</string>
     <string name="error_picking_image">Errore durante la selezione dell\'immagine</string>
+    <string name="theme">Tema</string>
+    <string-array name="theme_list">
+        <item>Chiaro</item>
+        <item>Scuro</item>
+        <item>Sistema</item>
+    </string-array>
 
     <string name="uncultivated">Non coltivato</string>
     <string name="watermelon">Angurie</string>

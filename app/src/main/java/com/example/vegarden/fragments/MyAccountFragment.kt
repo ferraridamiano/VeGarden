@@ -1,5 +1,6 @@
 package com.example.vegarden.fragments
 
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,12 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.example.vegarden.R
 import com.example.vegarden.activities.GardenSetupActivity
 import com.example.vegarden.activities.SigninActivity
 import com.example.vegarden.databinding.FragmentMyAccountBinding
 import com.example.vegarden.models.User
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -22,11 +25,14 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.squareup.picasso.Picasso
 
+
 class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
     private var _binding: FragmentMyAccountBinding? = null
+
+    var selectedTheme = 0
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
@@ -38,11 +44,6 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
     ): View {
         _binding = FragmentMyAccountBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +58,10 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
 
         // Appbar
         activity?.title = resources.getString(R.string.my_account)
+
+        // Get default value of theme
+        val prefs = activity?.getSharedPreferences("Settings", MODE_PRIVATE)
+        selectedTheme = prefs?.getInt("selectedTheme", 0) ?: 0
 
         refreshData()
 
@@ -80,7 +85,7 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
                         .addOnSuccessListener { documents ->
                             //delete everything and open GardenSetupActivity
                             db.runBatch { batch ->
-                                documents.forEach { document -> batch.delete(document.reference)}
+                                documents.forEach { document -> batch.delete(document.reference) }
                                 batch.delete(gardenRef)
                             }.addOnSuccessListener {
                                 startActivity(
@@ -96,6 +101,36 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
                 .setNegativeButton(R.string.no, null)
                 .setIcon(R.drawable.ic_warning)
                 .show()
+        }
+
+        binding.llTheme.setOnClickListener {
+
+            val themeList = resources.getStringArray(R.array.theme_list).toMutableList()
+
+            // Phones before android 10 can't use system theme
+            if (android.os.Build.VERSION.SDK_INT < 29){
+                themeList.removeAt(2)
+            }
+
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.theme))
+                .setPositiveButton(resources.getString(R.string.ok)) { _, _ ->
+
+                    when (selectedTheme) {
+                        // Light theme
+                        0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                        // Dark theme
+                        1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                        // System default
+                        2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                    }
+                    val prefsEdit = prefs?.edit()
+                    prefsEdit?.putInt("selectedTheme", selectedTheme)
+                    prefsEdit?.apply()
+                }
+                .setSingleChoiceItems(themeList.toTypedArray(), selectedTheme) { _, which ->
+                    selectedTheme = which
+                }.show()
         }
 
         binding.llLogout.setOnClickListener {
