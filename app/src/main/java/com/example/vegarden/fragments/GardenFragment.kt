@@ -1,6 +1,7 @@
 package com.example.vegarden.fragments
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -93,7 +94,7 @@ class GardenFragment : Fragment() {
                             null
                         )
                     )
-                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, null))
+                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.black, null))
                     .create()
             )
             binding.speedDial.addActionItem(
@@ -106,7 +107,7 @@ class GardenFragment : Fragment() {
                             null
                         )
                     )
-                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, null))
+                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.black, null))
                     .create()
             )
 
@@ -125,6 +126,8 @@ class GardenFragment : Fragment() {
                 }
                 false
             })
+            // main FAB icon color
+            binding.speedDial.mainFab.supportImageTintList = ColorStateList.valueOf(resources.getColor(R.color.black, null))
         } else {
             db.collection("users").document(gardenUserUid).get()
                 .addOnSuccessListener { document ->
