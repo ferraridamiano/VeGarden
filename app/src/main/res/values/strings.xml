@@ -64,6 +64,8 @@
     <string name="write_something_or_exit">Write something or exit</string>
     <string name="no_posts_found">No posts found</string>
     <string name="error_picking_image">Error while picking the image</string>
+    <string name="friend_added">Friend added</string>
+    <string name="friend_removed">Friend removed</string>
     <string name="theme">Theme</string>
     <string-array name="theme_list">
         <item>Light</item>

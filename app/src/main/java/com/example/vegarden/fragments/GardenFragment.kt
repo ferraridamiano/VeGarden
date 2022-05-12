@@ -132,33 +132,18 @@ class GardenFragment : Fragment() {
                     binding.tvPostsPhotos.text = getString(R.string.user_posts_and_photos, name)
                     activity?.title = getString(R.string.user_vegarden, name)
                 }
-            //Speed dial
-            // TODO: Change Icon
-            // TODO: different action if already friends
-            //binding.speedDial.background =
-            //    ResourcesCompat.getDrawable(resources, R.drawable.ic_person_add, null)
 
-            binding.speedDial.setOnChangeListener(object : SpeedDialView.OnChangeListener {
-                override fun onMainActionSelected(): Boolean {
-                    val firestoreRef = db.collection("users").document(auth.currentUser!!.uid)
-                    firestoreRef.get().addOnSuccessListener { document ->
-                        val currentUser = document.toObject(User::class.java)!!
-                        //Add gardenUser to the list of friends
-                        currentUser.myFriends = currentUser.myFriends.plus(gardenUserUid)
-                        firestoreRef.set(currentUser).addOnSuccessListener {
-                            Snackbar.make(
-                                requireActivity().findViewById(R.id.flFragment),
-                                "Friend added", Snackbar.LENGTH_SHORT
-                            )
-                                .setAnchorView(requireActivity().findViewById(R.id.speedDial))
-                                .setAction("") {}.show()
-                        }
-                    }
-                    return false
-                }
+            binding.speedDial.visibility = View.GONE
 
-                override fun onToggleChanged(isOpen: Boolean) {}
-            })
+            val firestoreRef = db.collection("users").document(auth.currentUser!!.uid)
+            firestoreRef.get().addOnSuccessListener { document ->
+                binding.fabAddRemoveFriend.visibility = View.VISIBLE
+                val currentUser = document.toObject(User::class.java)!!
+                // Already friends
+                if (currentUser.myFriends.contains(gardenUserUid)) setFabToRemoveFriend(currentUser)
+                // Not yet friends
+                else setFabToAddFriend(currentUser)
+            }
         }
     }
 
@@ -202,6 +187,56 @@ class GardenFragment : Fragment() {
                 }
             }
         }
+
+    private fun setFabToAddFriend(currentUser: User) {
+        //Change icon
+        binding.fabAddRemoveFriend.setImageDrawable(
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_person_add,
+                null
+            )
+        )
+        // Add friend and change fab icon and function
+        binding.fabAddRemoveFriend.setOnClickListener {
+            currentUser.myFriends = currentUser.myFriends.plus(gardenUserUid)
+            db.collection("users").document(auth.currentUser!!.uid).set(currentUser)
+                .addOnSuccessListener {
+                    Snackbar.make(
+                        requireActivity().findViewById(R.id.flFragment),
+                        getString(R.string.friend_added), Snackbar.LENGTH_SHORT
+                    )
+                        .setAnchorView(requireActivity().findViewById(R.id.fabAddRemoveFriend))
+                        .show()
+                    setFabToRemoveFriend(currentUser)
+                }
+        }
+    }
+
+    private fun setFabToRemoveFriend(currentUser: User) {
+        //Change icon
+        binding.fabAddRemoveFriend.setImageDrawable(
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_person_remove,
+                null
+            )
+        )
+        // Remove friend and change fab icon and function
+        binding.fabAddRemoveFriend.setOnClickListener {
+            currentUser.myFriends = currentUser.myFriends.minus(gardenUserUid)
+            db.collection("users").document(auth.currentUser!!.uid).set(currentUser)
+                .addOnSuccessListener {
+                    Snackbar.make(
+                        requireActivity().findViewById(R.id.flFragment),
+                        getString(R.string.friend_removed), Snackbar.LENGTH_SHORT
+                    )
+                        .setAnchorView(requireActivity().findViewById(R.id.fabAddRemoveFriend))
+                        .show()
+                    setFabToAddFriend(currentUser)
+                }
+        }
+    }
 
     override fun onResume() {
         super.onResume()
@@ -284,8 +319,8 @@ class GardenFragment : Fragment() {
             }
     }
 
-    private fun checkLoadingStatusAndShow(){
-        if(gardenLoaded && postsLoaded){
+    private fun checkLoadingStatusAndShow() {
+        if (gardenLoaded && postsLoaded) {
             binding.progressBar.visibility = View.GONE
             binding.nestedScrollView.visibility = View.VISIBLE
         }

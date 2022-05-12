@@ -25,8 +25,13 @@
         <entry key="app/src/main/res/drawable/ic_broccoli_background.xml" value="0.2465" />
         <entry key="app/src/main/res/drawable/ic_cross.xml" value="0.304" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.2465" />
+        <entry key="app/src/main/res/drawable/ic_outline_explore.xml" value="0.2565" />
         <entry key="app/src/main/res/drawable/ic_outline_explore_24.xml" value="0.2465" />
+        <entry key="app/src/main/res/drawable/ic_outline_people.xml" value="0.2565" />
+        <entry key="app/src/main/res/drawable/ic_outline_settings.xml" value="0.2565" />
         <entry key="app/src/main/res/drawable/ic_outline_settings_24.xml" value="0.2975" />
+        <entry key="app/src/main/res/drawable/ic_person_add.xml" value="0.2565" />
+        <entry key="app/src/main/res/drawable/ic_person_remove.xml" value="0.2565" />
         <entry key="app/src/main/res/drawable/login_background.xml" value="0.2975" />
         <entry key="app/src/main/res/drawable/menu_ic_account.xml" value="0.346" />
         <entry key="app/src/main/res/drawable/menu_ic_explore.xml" value="0.346" />
