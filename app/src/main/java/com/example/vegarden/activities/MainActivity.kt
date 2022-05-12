@@ -1,7 +1,7 @@
 package com.example.vegarden.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.vegarden.R
 import com.example.vegarden.databinding.ActivityMainBinding
@@ -59,5 +59,10 @@ class MainActivity : AppCompatActivity() {
             replace(R.id.flFragment, fragment)
             commit()
         }
+
+    override fun onBackPressed() {
+        // Close app if back button is pressed
+        finishAffinity()
+    }
 
 }
