@@ -43,7 +43,8 @@
         <activity
             android:name=".activities.GardenSetupActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.VeGarden.NoActionBar" />
     </application>
 
 </manifest>
