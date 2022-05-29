@@ -84,7 +84,8 @@
                 android:layout_marginHorizontal="25dp"
                 android:scaleX="1.5"
                 android:scaleY="1.5"
-                android:src="@drawable/ic_cross" />
+                android:src="@drawable/ic_cross"
+                app:tint="@color/black" />
 
             <RelativeLayout
                 android:layout_width="110dp"

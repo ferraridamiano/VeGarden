@@ -340,14 +340,7 @@ class GardenFragment : Fragment() {
             .orderBy("timestamp", Query.Direction.DESCENDING).limit(10)
             .get()
             .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    Snackbar.make(
-                        requireActivity().findViewById(R.id.flFragment),
-                        "No posts found",
-                        Snackbar.LENGTH_SHORT
-                    ).setAnchorView(requireActivity().findViewById(R.id.speedDial))
-                        .setAction("") {}.show()
-                } else {
+                if (!documents.isEmpty) {
                     documents.forEach { document ->
                         arrayPosts.add(
                             PostsViewModel(
@@ -362,9 +355,9 @@ class GardenFragment : Fragment() {
                         )
                     }
                     adapter.notifyItemRangeChanged(0, arrayPosts.size)
-                    postsLoaded = true
-                    checkLoadingStatusAndShow()
                 }
+                postsLoaded = true
+                checkLoadingStatusAndShow()
             }
             .addOnFailureListener {
                 Snackbar.make(
