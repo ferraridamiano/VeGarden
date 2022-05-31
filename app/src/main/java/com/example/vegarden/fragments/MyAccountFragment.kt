@@ -1,7 +1,9 @@
 package com.example.vegarden.fragments
 
+import android.app.Activity
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +18,7 @@ import com.example.vegarden.activities.SigninActivity
 import com.example.vegarden.databinding.FragmentMyAccountBinding
 import com.example.vegarden.models.User
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -24,6 +27,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.squareup.picasso.Picasso
+import java.util.*
 
 
 class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
@@ -66,7 +70,7 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
         refreshData()
 
         binding.ivPhoto.setOnClickListener {
-            fileChooser.launch("image/*")
+            pickImageFromGallery()
         }
 
         binding.llMyFriends.setOnClickListener {
@@ -154,31 +158,59 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
             }
     }
 
-    private val fileChooser =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { imageUri ->
-            if (imageUri != null) {
-                val ref =
-                    storage.reference.child("profilePhotos/${auth.currentUser!!.uid}-${System.currentTimeMillis()}")
-                ref.putFile(imageUri).continueWithTask { task ->
-                    if (!task.isSuccessful) {
-                        task.exception?.let {
-                            throw it
-                        }
+    private fun pickImageFromGallery() {
+        //Intent to pick image
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, IMAGE_PICK_CODE)
+    }
+
+    companion object {
+        //image pick code
+        private val IMAGE_PICK_CODE = 1000
+        //Permission code
+        private val PERMISSION_CODE = 1001
+    }
+
+    //handle requested permission result
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode){
+            PERMISSION_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] ==
+                    PackageManager.PERMISSION_GRANTED){
+                    pickImageFromGallery()
+                }
+            }
+        }
+    }
+
+    //handle result of picked image
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
+            val imageUri = data?.data!!
+            val ref =
+                storage.reference.child("profilePhotos/${auth.currentUser!!.uid}-${System.currentTimeMillis()}")
+            ref.putFile(imageUri).continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let {
+                        throw it
                     }
-                    ref.downloadUrl
-                }.addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val downloadUri = task.result
-                        val firestoreRef = db.collection("users").document(auth.currentUser!!.uid)
-                        firestoreRef.get().addOnSuccessListener { document ->
-                            val user = document.toObject(User::class.java)!!
-                            user.profilePhoto = downloadUri.toString()
-                            firestoreRef.set(user)
-                            refreshData()
-                        }
+                }
+                ref.downloadUrl
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val downloadUri = task.result
+                    val firestoreRef = db.collection("users").document(auth.currentUser!!.uid)
+                    firestoreRef.get().addOnSuccessListener { document ->
+                        val user = document.toObject(User::class.java)!!
+                        user.profilePhoto = downloadUri.toString()
+                        firestoreRef.set(user)
+                        refreshData()
                     }
                 }
             }
         }
-
+    }
 }
