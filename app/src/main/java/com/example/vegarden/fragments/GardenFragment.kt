@@ -1,6 +1,8 @@
 package com.example.vegarden.fragments
 
+import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -9,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -114,7 +117,8 @@ class GardenFragment : Fragment() {
             binding.speedDial.setOnActionSelectedListener(SpeedDialView.OnActionSelectedListener { actionItem ->
                 when (actionItem.id) {
                     R.id.addPhoto -> {
-                        fileChooser.launch("image/*")
+                        //fileChooser.launch("image/*")
+                        pickImageFromGallery()
                         binding.speedDial.close()
                         return@OnActionSelectedListener true // close with animation
                     }
@@ -150,46 +154,75 @@ class GardenFragment : Fragment() {
         }
     }
 
-    private val fileChooser =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { imageUri ->
-            if (imageUri != null) {
-                val ref =
-                    storage.reference.child("images/$gardenUserUid-${System.currentTimeMillis()}")
-                ref.putFile(imageUri).continueWithTask { task ->
-                    if (!task.isSuccessful) {
-                        Snackbar.make(
-                            requireActivity().findViewById(R.id.flFragment),
-                            getString(R.string.error_picking_image),
-                            Snackbar.LENGTH_SHORT
-                        ).setAnchorView(requireActivity().findViewById(R.id.speedDial)).show()
-                    }
-                    ref.downloadUrl
-                }.addOnSuccessListener { downloadUri ->
-                    val newPost = hashMapOf(
-                        "user" to gardenUserUid,
-                        "type" to "photo",
-                        "content" to downloadUri,
-                        "timestamp" to Calendar.getInstance().time
-                    )
-                    db.collection("posts").add(newPost)
-                        .addOnSuccessListener {
-                            refreshPosts()
-                        }.addOnFailureListener {
-                            Snackbar.make(
-                                requireActivity().findViewById(R.id.flFragment),
-                                getString(R.string.connection_error),
-                                Snackbar.LENGTH_SHORT
-                            ).setAnchorView(requireActivity().findViewById(R.id.speedDial)).show()
-                        }
-                }.addOnFailureListener {
-                    Snackbar.make(
-                        requireActivity().findViewById(R.id.flFragment),
-                        getString(R.string.connection_error),
-                        Snackbar.LENGTH_SHORT
-                    ).setAnchorView(requireActivity().findViewById(R.id.speedDial)).show()
+    private fun pickImageFromGallery() {
+        //Intent to pick image
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, IMAGE_PICK_CODE)
+    }
+
+    companion object {
+        //image pick code
+        private val IMAGE_PICK_CODE = 1000
+        //Permission code
+        private val PERMISSION_CODE = 1001
+    }
+
+    //handle requested permission result
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode){
+            PERMISSION_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] ==
+                    PackageManager.PERMISSION_GRANTED){
+                    pickImageFromGallery()
                 }
             }
         }
+    }
+
+    //handle result of picked image
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
+            val imageUri = data?.data!!
+            val ref =
+                storage.reference.child("images/$gardenUserUid-${System.currentTimeMillis()}")
+            ref.putFile(imageUri).continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    Snackbar.make(
+                        requireActivity().findViewById(R.id.flFragment),
+                        getString(R.string.error_picking_image),
+                        Snackbar.LENGTH_SHORT
+                    ).setAnchorView(requireActivity().findViewById(R.id.speedDial)).show()
+                }
+                ref.downloadUrl
+            }.addOnSuccessListener { downloadUri ->
+                val newPost = hashMapOf(
+                    "user" to gardenUserUid,
+                    "type" to "photo",
+                    "content" to downloadUri,
+                    "timestamp" to Calendar.getInstance().time
+                )
+                db.collection("posts").add(newPost)
+                    .addOnSuccessListener {
+                        refreshPosts()
+                    }.addOnFailureListener {
+                        Snackbar.make(
+                            requireActivity().findViewById(R.id.flFragment),
+                            getString(R.string.connection_error),
+                            Snackbar.LENGTH_SHORT
+                        ).setAnchorView(requireActivity().findViewById(R.id.speedDial)).show()
+                    }
+            }.addOnFailureListener {
+                Snackbar.make(
+                    requireActivity().findViewById(R.id.flFragment),
+                    getString(R.string.connection_error),
+                    Snackbar.LENGTH_SHORT
+                ).setAnchorView(requireActivity().findViewById(R.id.speedDial)).show()
+            }
+        }
+    }
 
     private fun setFabToAddFriend(currentUser: User) {
         //Change icon
