@@ -22,7 +22,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class ChangeCropActivity : AppCompatActivity() {
+class ChangePlotActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChangeCropBinding
     private lateinit var auth: FirebaseAuth

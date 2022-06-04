@@ -11,14 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vegarden.R
 import com.example.vegarden.activities.AddPostActivity
-import com.example.vegarden.activities.ChangeCropActivity
+import com.example.vegarden.activities.ChangePlotActivity
 import com.example.vegarden.adapters.PostsAdapter
 import com.example.vegarden.databinding.FragmentGardenBinding
 import com.example.vegarden.getPlotDrawable
@@ -460,7 +458,7 @@ class GardenFragment : Fragment() {
         imageView.adjustViewBounds = true
         imageView.isClickable = true
         imageView.setOnClickListener {
-            val intent = Intent(requireContext(), ChangeCropActivity::class.java)
+            val intent = Intent(requireContext(), ChangePlotActivity::class.java)
             intent.putExtra("gardenPlot", plot as Serializable)
             intent.putExtra("rowNumber", rowNumber)
             intent.putExtra("columnNumber", columnNumber)
