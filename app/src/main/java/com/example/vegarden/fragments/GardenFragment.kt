@@ -371,7 +371,10 @@ class GardenFragment : Fragment() {
             .orderBy("timestamp", Query.Direction.DESCENDING).limit(10)
             .get()
             .addOnSuccessListener { documents ->
-                if (!documents.isEmpty) {
+                if(documents.isEmpty){
+                    binding.tvNoPostsFound.visibility = View.VISIBLE
+                }
+                else {
                     documents.forEach { document ->
                         arrayPosts.add(
                             PostsViewModel(
