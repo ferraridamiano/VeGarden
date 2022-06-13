@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
@@ -18,7 +17,6 @@ import com.example.vegarden.activities.SigninActivity
 import com.example.vegarden.databinding.FragmentMyAccountBinding
 import com.example.vegarden.models.User
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,8 +25,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.squareup.picasso.Picasso
-import java.util.*
-
 
 class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
     private lateinit var auth: FirebaseAuth
@@ -145,6 +141,9 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
 
     }
 
+    /**
+     * Refreshes name, email and profile picture of the logged user
+     */
     private fun refreshData() {
         db.collection("users").document(auth.currentUser!!.uid).get()
             .addOnSuccessListener { document ->
@@ -167,9 +166,9 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
 
     companion object {
         //image pick code
-        private val IMAGE_PICK_CODE = 1000
+        private const val IMAGE_PICK_CODE = 1000
         //Permission code
-        private val PERMISSION_CODE = 1001
+        private const val PERMISSION_CODE = 1001
     }
 
     //handle requested permission result
@@ -185,7 +184,9 @@ class MyAccountFragment : Fragment(R.layout.fragment_my_account) {
         }
     }
 
-    //handle result of picked image
+    /**
+     * Handle picked image -> change profile picture
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){

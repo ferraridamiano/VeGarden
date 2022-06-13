@@ -161,9 +161,9 @@ class GardenFragment : Fragment() {
 
     companion object {
         //image pick code
-        private val IMAGE_PICK_CODE = 1000
+        private const val IMAGE_PICK_CODE = 1000
         //Permission code
-        private val PERMISSION_CODE = 1001
+        private const val PERMISSION_CODE = 1001
     }
 
     //handle requested permission result
@@ -179,7 +179,9 @@ class GardenFragment : Fragment() {
         }
     }
 
-    //handle result of picked image
+    /**
+     * Handle picked image -> post it
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
@@ -222,6 +224,9 @@ class GardenFragment : Fragment() {
         }
     }
 
+    /**
+     * This function changes the FAB icon and its function to "add friend"
+     */
     private fun setFabToAddFriend(currentUser: User) {
         //Change icon
         binding.fabAddRemoveFriend.setImageDrawable(
@@ -247,6 +252,9 @@ class GardenFragment : Fragment() {
         }
     }
 
+    /**
+     * This function changes the FAB icon and its function to "remove friend"
+     */
     private fun setFabToRemoveFriend(currentUser: User) {
         //Change icon
         binding.fabAddRemoveFriend.setImageDrawable(
@@ -280,6 +288,20 @@ class GardenFragment : Fragment() {
         refreshPosts()
     }
 
+    /**
+     * Check if both the garden and the posts are loaded. If they are this function removes the
+     * progressbar and shows the page.
+     */
+    private fun checkLoadingStatusAndShow() {
+        if (gardenLoaded && postsLoaded) {
+            binding.progressBar.visibility = View.GONE
+            binding.nestedScrollView.visibility = View.VISIBLE
+        }
+    }
+
+    /**
+     * This function refreshes the garden. Call it when some data changes (e.g. a plot changes)
+     */
     private fun refreshGarden() {
         var garden: List<View>?
         db.collection("gardens").document(gardenUserUid).get()
@@ -353,13 +375,9 @@ class GardenFragment : Fragment() {
             }
     }
 
-    private fun checkLoadingStatusAndShow() {
-        if (gardenLoaded && postsLoaded) {
-            binding.progressBar.visibility = View.GONE
-            binding.nestedScrollView.visibility = View.VISIBLE
-        }
-    }
-
+    /**
+     * Refreshes the posts of the current user (it could be the logged user or another one
+     */
     private fun refreshPosts() {
         binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
         val arrayPosts = ArrayList<PostsViewModel>()
@@ -402,8 +420,13 @@ class GardenFragment : Fragment() {
             }
     }
 
-    // Utility functions to draw the garden
+    // Utility functions to draw the garden --------------------------------------------------------
 
+    /**
+     * Given a 2D matrix of GardenPlots it returns a list of horizontal linearLayout. If stacked
+     * vertically in a linearLayout it will display the digital representation of the vegetable
+     * garden.
+     */
     private fun createVegetableGarden(
         garden: ArrayList<ArrayList<GardenPlot>>,
         separatorColor: Drawable,
@@ -423,6 +446,10 @@ class GardenFragment : Fragment() {
         return listOfRows.toList()
     }
 
+    /**
+     * Given an ArrayList of GardenPlot it returns an horizontal linear layout that contains a row
+     * of plots (which are clickable imageView)
+     */
     private fun createRow(
         gardenRow: ArrayList<GardenPlot>,
         rowNumber: Int,
@@ -449,6 +476,10 @@ class GardenFragment : Fragment() {
         return row
     }
 
+    /**
+     * Given a GardenPlot, the rowNumber and columnNumber it returns a clickable ImageView of the
+     * plot.
+     */
     private fun createPlot(plot: GardenPlot, rowNumber: Int, columnNumber: Int): ImageView {
         val imageView = ImageView(requireContext())
         imageView.setImageDrawable(getPlotDrawable(requireContext(), plot.cropID))

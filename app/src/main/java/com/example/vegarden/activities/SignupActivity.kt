@@ -79,7 +79,7 @@ class SignupActivity : AppCompatActivity() {
                             // Create a new user with a first and last name
                             val newUser = User(name, surname, email, user!!.uid)
                             db.collection("users").document(user.uid).set(newUser)
-                                .addOnSuccessListener { _ ->
+                                .addOnSuccessListener {
                                     startActivity(Intent(this, GardenSetupActivity::class.java))
                                     finish()
                                 }
@@ -93,6 +93,9 @@ class SignupActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Displays a snackbar that says that it is not possible to register at the moment
+     */
     private fun displayRegistrationError() {
         Snackbar.make(
             findViewById(android.R.id.content),

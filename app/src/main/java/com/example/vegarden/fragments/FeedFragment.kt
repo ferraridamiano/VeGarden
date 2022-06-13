@@ -69,6 +69,11 @@ class FeedFragment : Fragment() {
         refreshPosts()
     }
 
+    /**
+     * Refreshes all the posts depending on the page (Friends or Explore). Posts will be displayed
+     * chronologically (last post first). It will display a text that says "No posts" if there are
+     * not any posts (e.g. the user has no friends and so no posts from his friends).
+     */
     private fun refreshPosts() {
         binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
         val arrayPosts = ArrayList<PostsViewModel>()

@@ -119,7 +119,7 @@ class ChangePlotActivity : AppCompatActivity() {
                     }
             }
         }
-        // Otherwise it will able just to see the data
+        // Otherwise it will able JUST to see the data
         else {
             // If there are not notes it will not show anything
             if (gardenPlot.userNotes.isNullOrBlank()) {
@@ -142,6 +142,10 @@ class ChangePlotActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Displays a DatePicker set on an initial date. If initialDate is null it will be selected the
+     * current day
+     */
     private fun sowingDatePicker(initialDate: Date?) {
         val myCalendar = Calendar.getInstance()
 
@@ -171,6 +175,10 @@ class ChangePlotActivity : AppCompatActivity() {
         ).show()
     }
 
+    /**
+     * Given a Date? it will return a user-friendly strings that represented the passed days. E.g.
+     * "Today", "Yesterday", "13 days ago", etc.
+     */
     private fun getStringDateSinceSowing(sowingDate: Date?): String {
         if (sowingDate == null) return resources.getString(R.string.unknown)
         val daysSinceSowing =
@@ -185,7 +193,11 @@ class ChangePlotActivity : AppCompatActivity() {
         return "${sdf.format(sowingDate)}   ($daysSinceSowing ${resources.getString(R.string.days_ago)})"
     }
 
-    private fun plantsNumberPicker(initialValue: Int?, maxValue: Int = 50): Dialog? {
+    /**
+     * Displays a number picker with elements that ranges between 1 and maxValue (default 50) plus
+     * an "Unknown" option. At the beginning it will be centered on initialValue.
+     */
+    private fun plantsNumberPicker(initialValue: Int?, maxValue: Int = 50) {
         val minValue = 0
         val numberPicker = NumberPicker(this)
         numberPicker.maxValue = maxValue
@@ -199,13 +211,13 @@ class ChangePlotActivity : AppCompatActivity() {
         builder.setTitle(resources.getString(R.string.number_of_plants))
         builder.setMessage(resources.getString(R.string.choose_a_value))
         builder.setPositiveButton("OK") { _, _ ->
-            selectedNumberOfPlants = numberPicker.value
-            binding.tvPlants.text = if (selectedNumberOfPlants == 0)
+            selectedNumberOfPlants = if(numberPicker.value == 0) null else numberPicker.value
+            binding.tvPlants.text = if (selectedNumberOfPlants == null)
                 resources.getString(R.string.unknown) else selectedNumberOfPlants.toString()
         }
         builder.setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
         builder.setView(numberPicker)
         builder.create()
-        return builder.show()
+        builder.show()
     }
 }

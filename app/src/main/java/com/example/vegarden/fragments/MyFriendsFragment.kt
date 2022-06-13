@@ -59,6 +59,9 @@ class MyFriendsFragment : Fragment() {
         refreshFriends()
     }
 
+    /**
+     * Refreshes the list of the friends
+     */
     private fun refreshFriends() {
         binding.rvMyFriends.layoutManager = LinearLayoutManager(requireContext())
         val arrayFriends = ArrayList<MyFriendsViewModel>()

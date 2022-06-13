@@ -136,6 +136,10 @@ class GardenSetupActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Check that the size of Vegetable garden is ok, computes the area and plotSize and changes
+     * Widgets visibility.
+     */
     private fun onTextChange(width: String, height: String) {
         if (isSizeCorrect(width, height)) {
             val intWidth = width.toInt()
@@ -160,5 +164,8 @@ class GardenSetupActivity : AppCompatActivity() {
     }
 }
 
+/**
+ * Check the submitted size of the vegetable garden is ok
+ */
 private fun isSizeCorrect(str1: String, str2: String): Boolean =
     str1.isNotBlank() && str2.isNotBlank() && str1.toInt() > 0 && str2.toInt() > 0
