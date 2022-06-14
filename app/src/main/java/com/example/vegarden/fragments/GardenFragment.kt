@@ -386,7 +386,7 @@ class GardenFragment : Fragment() {
 
         db.collection("posts")
             .whereEqualTo("user", gardenUserUid)
-            .orderBy("timestamp", Query.Direction.DESCENDING).limit(10)
+            .orderBy("timestamp", Query.Direction.DESCENDING)//.limit(10)
             .get()
             .addOnSuccessListener { documents ->
                 if(documents.isEmpty){

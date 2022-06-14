@@ -81,7 +81,7 @@ class FeedFragment : Fragment() {
         binding.rvPosts.adapter = adapter
         if (isExploreFragment) {
             db.collection("posts")
-                .orderBy("timestamp", Query.Direction.DESCENDING).limit(10)
+                .orderBy("timestamp", Query.Direction.DESCENDING)//.limit(10)
                 .get()
                 .addOnSuccessListener { documents ->
                     if (documents.isEmpty) {
@@ -128,7 +128,7 @@ class FeedFragment : Fragment() {
                         binding.tvNoPostsFound.visibility = View.VISIBLE
                     } else {
                         db.collection("posts").whereIn("user", user.myFriends)
-                            .orderBy("timestamp", Query.Direction.DESCENDING).limit(10)
+                            .orderBy("timestamp", Query.Direction.DESCENDING)//.limit(10)
                             .get()
                             .addOnSuccessListener { documents ->
                                 if (documents.isEmpty) {
